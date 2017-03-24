@@ -1052,6 +1052,15 @@ int TWFunc::Set_Brightness(std::string brightness_value)
 	return result;
 }
 
+int TWFunc::Set_Btn_Brightness(std::string btn_brightness_value)
+{
+	int result = -1;
+	std::string btn_brightness_file = "/sys/class/leds/button-backlight/brightness";
+	LOGINFO("TWFunc::Set_Btn_Brightness: Setting buttons brightness control to %s\n", btn_brightness_value.c_str());
+	result = TWFunc::write_file(btn_brightness_file, btn_brightness_value);
+	return result;
+}
+
 bool TWFunc::Toggle_MTP(bool enable) {
 #ifdef TW_HAS_MTP
 	static int was_enabled = false;
