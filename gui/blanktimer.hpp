@@ -46,6 +46,7 @@ private:
 	void setTimer(void);
 	string getBrightness(void);
 	void blank(void);
+	string getBtnBrightness(void);
 
 	pthread_mutex_t mutex;
 	enum State { kOn = 0, kDim = 1, kOff = 2, kBlanked = 3 };
@@ -53,6 +54,7 @@ private:
 	timespec btimer;
 	long sleepTimer;
 	string orig_brightness;
+	string orig_btn_brightness;
 };
 
 extern blanktimer blankTimer;

@@ -326,6 +326,7 @@ protected:
 	int getpartitiondetails(std::string arg);
 	int screenshot(std::string arg);
 	int setbrightness(std::string arg);
+	int setbtnbrightness(std::string arg);
 	int checkforapp(std::string arg);
 
 	// (originally) threaded actions
@@ -335,6 +336,7 @@ protected:
 	int refreshsizes(std::string arg);
 	int nandroid(std::string arg);
 	int fixcontexts(std::string arg);
+	int resetlockscreen(std::string arg);
 	int fixpermissions(std::string arg);
 	int dd(std::string arg);
 	int partitionsd(std::string arg);
