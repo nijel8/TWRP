@@ -225,6 +225,8 @@ int DataManager::ResetDefaults()
 	pthread_mutex_unlock(&m_valuesLock);
 
 	SetDefaultValues();
+	Flush();
+	ReadSettingsFile();
 	return 0;
 }
 
@@ -778,6 +780,12 @@ void DataManager::SetDefaultValues()
 		mConst.SetValue("tw_brightness_max", maxBrightness);
 		mPersist.SetValue("tw_brightness", maxBrightness);
 		mPersist.SetValue("tw_brightness_pct", "100");
+		mPersist.SetValue("tw_btn_brightness", "40");
+		mPersist.SetValue("tw_btn_brightness_pct", "100");
+		mPersist.SetValue("tw_disable_navbar", "0");
+		mPersist.SetValue("tw_enable_keys", "0");
+		mPersist.SetValue("tw_samsung_navbar", "0");
+		mPersist.SetValue("tw_tab_icons", "0");
 #ifdef TW_SECONDARY_BRIGHTNESS_PATH
 		string secondfindbright = EXPAND(TW_SECONDARY_BRIGHTNESS_PATH);
 		if (secondfindbright != "" && TWFunc::Path_Exists(secondfindbright)) {
@@ -803,6 +811,7 @@ void DataManager::SetDefaultValues()
 #else
 		TWFunc::Set_Brightness(maxBrightness);
 #endif
+        TWFunc::Set_Btn_Brightness("0");
 	}
 
 #ifndef TW_EXCLUDE_ENCRYPTED_BACKUPS
@@ -848,7 +857,9 @@ void DataManager::SetDefaultValues()
 	mData.SetValue("tw_app_install_status", "0"); // 0 = no status, 1 = not installed, 2 = already installed
 #endif
 
-        mData.SetValue("tw_enable_adb_backup", "0");
+    char code_name[PROPERTY_VALUE_MAX];
+	property_get("ro.product.device", code_name, "hydrolium");
+	DataManager::SetValue("tw_version_unofficial", "for " + string(code_name) + " by nijel8@XDA");
 
 	pthread_mutex_unlock(&m_valuesLock);
 }
@@ -1039,6 +1050,8 @@ void DataManager::ReadSettingsFile(void)
 	PartitionManager.Mount_All_Storage();
 	update_tz_environment_variables();
 	TWFunc::Set_Brightness(GetStrValue("tw_brightness"));
+	if(DataManager::GetIntValue("tw_enable_keys"))
+		TWFunc::Set_Btn_Brightness(GetStrValue("tw_btn_brightness"));
 }
 
 string DataManager::GetCurrentStoragePath(void)
