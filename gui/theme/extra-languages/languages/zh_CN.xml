@@ -9,7 +9,15 @@
 		<resource name="font_m" type="fontoverride" filename="DroidSansFallback.ttf" scale="100" />
 		<resource name="font_s" type="fontoverride" filename="DroidSansFallback.ttf" scale="100" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansFallback.ttf" scale="100" />
-
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
+		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
+		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
+		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
+		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
+		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
+		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+		
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System 镜像</string>
@@ -357,18 +365,21 @@
 		<string name="curr_tz">当前时区：%tw_time_zone%</string>
 		<string name="curr_tz_s">当前时区：</string>
 		<string name="set_tz_btn">设置时区</string>
-		<string name="settings_screen_hdr">屏幕</string>
+		<string name="settings_screen_hdr">屏幕和按钮</string>
 		<string name="settings_screen_timeout_hdr">屏幕超时</string>
 		<string name="enable_timeout_chk">启用屏幕超时</string>
 		<string name="screen_to_slider">屏幕超时时间（秒）：</string>
 		<string name="screen_to_slider_s">屏幕超时（0=禁用）：%tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">屏幕超时设置不可用</string>
 		<string name="screen_bright_slider">屏幕亮度：%tw_brightness_pct%%</string>
-		<string name="screen_bright_na">屏幕亮度设置不可用</string>
-		<string name="vibration_hdr">振动</string>
-		<string name="button_vibration_hdr">按钮振动</string>
-		<string name="kb_vibration_hdr">键盘振动</string>
-		<string name="act_vibration_hdr">操作振动</string>
+		<string name="buttons_bright_slider">按钮亮度: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">禁用导航栏</string>
+		<string name="enbl_keys_chk">启用设备按钮</string>
+		<string name="screen_bright_na">亮度设置不可用</string>
+		<string name="vibration_hdr">振动设置</string>
+		<string name="button_vibration_hdr">按钮振动强度</string>
+		<string name="kb_vibration_hdr">键盘振动强度</string>
+		<string name="act_vibration_hdr">操作振动强度</string>
 		<string name="button_vibration">按钮振动强度：</string>
 		<string name="kb_vibration">键盘振动强度：</string>
 		<string name="act_vibration">操作振动强度：</string>

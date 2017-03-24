@@ -71,7 +71,7 @@
 	</resources>
 
 	<variables>
-		<variable name="tw_samsung_navbar" value="0" persist="1"/>
+	        <variable name="tw_menu_key" value="slideout"/>
 
 		<variable name="tw_hide_kb" value="0"/>
 		<variable name="screen_width" value="1080"/>
@@ -79,6 +79,10 @@
 		<variable name="status_height" value="72"/>
 		<variable name="header_height" value="256"/>
 		<variable name="navbar_height" value="130"/>
+		
+		<!-- toggle_navbar = screen_height / (screen_height - navbar_height) -->
+		<variable name="toggle_navbar" value="1.072625698"/> 
+		
 		<variable name="content_width" value="1008"/>
 		<variable name="content_overlay_width" value="936"/>
 		<variable name="dialog_height" value="704"/>
@@ -120,56 +124,56 @@
 		<variable name="row1_y" value="256"/>
 		<variable name="row1a_y" value="288"/>
 		<variable name="row2_y" value="320"/>
-		<variable name="row2a_y" value="352"/>
+		<variable name="row2a_y" value="352*%toggle_navbar%"/>
 		<variable name="row_tab_y" value="346"/>
-		<variable name="row2_input_y" value="381"/>
+		<variable name="row2_input_y" value="381*%toggle_navbar%"/>
 		<variable name="row3_y" value="384"/>
-		<variable name="row3_input_y" value="413"/>
-		<variable name="row3a_y" value="416"/>
-		<variable name="row4_y" value="448"/>
-		<variable name="row4_input_y" value="477"/>
-		<variable name="row4a_y" value="480"/>
-		<variable name="row5_y" value="512"/>
-		<variable name="row5a_y" value="544"/>
-		<variable name="row6_y" value="576"/>
-		<variable name="row6a_y" value="608"/>
-		<variable name="row7_y" value="640"/>
-		<variable name="row7a_y" value="672"/>
-		<variable name="row8_y" value="704"/>
-		<variable name="row8a_y" value="736"/>
-		<variable name="row9_y" value="768"/>
-		<variable name="row9a_y" value="800"/>
-		<variable name="row10_y" value="832"/>
-		<variable name="row10a_y" value="864"/>
-		<variable name="row11_y" value="896"/>
-		<variable name="row11a_y" value="928"/>
-		<variable name="row12_y" value="960"/>
-		<variable name="row12a_y" value="992"/>
-		<variable name="row13_y" value="1024"/>
-		<variable name="row13a_y" value="1056"/>
-		<variable name="row14_y" value="1088"/>
-		<variable name="row14a_y" value="1120"/>
-		<variable name="row15_y" value="1152"/>
-		<variable name="row15a_y" value="1184"/>
-		<variable name="row16_y" value="1216"/>
-		<variable name="row16a_y" value="1248"/>
-		<variable name="row17_y" value="1280"/>
-		<variable name="row17a_y" value="1312"/>
-		<variable name="row18_y" value="1344"/>
-		<variable name="row18a_y" value="1376"/>
-		<variable name="row19_y" value="1408"/>
-		<variable name="row19a_y" value="1440"/>
-		<variable name="row20_y" value="1472"/>
-		<variable name="row20a_y" value="1504"/>
-		<variable name="row21_y" value="1536"/>
-		<variable name="row21a_y" value="1568"/>
-		<variable name="row22_y" value="1600"/>
-		<variable name="row22a_y" value="1632"/>
-		<variable name="row23_y" value="1664"/>
-		<variable name="row23a_y" value="1696"/>
-		<variable name="row24_y" value="1728"/>
-		<variable name="row24a_y" value="1760"/>
-		<variable name="row25_y" value="1792"/>
+		<variable name="row3_input_y" value="413*%toggle_navbar%"/>
+		<variable name="row3a_y" value="416*%toggle_navbar%"/>
+		<variable name="row4_y" value="448*%toggle_navbar%"/>
+		<variable name="row4_input_y" value="477*%toggle_navbar%"/>
+		<variable name="row4a_y" value="480*%toggle_navbar%"/>
+		<variable name="row5_y" value="512*%toggle_navbar%"/>
+		<variable name="row5a_y" value="544*%toggle_navbar%"/>
+		<variable name="row6_y" value="576*%toggle_navbar%"/>
+		<variable name="row6a_y" value="608*%toggle_navbar%"/>
+		<variable name="row7_y" value="640*%toggle_navbar%"/>
+		<variable name="row7a_y" value="672*%toggle_navbar%"/>
+		<variable name="row8_y" value="704*%toggle_navbar%"/>
+		<variable name="row8a_y" value="736*%toggle_navbar%"/>
+		<variable name="row9_y" value="768*%toggle_navbar%"/>
+		<variable name="row9a_y" value="800*%toggle_navbar%"/>
+		<variable name="row10_y" value="832*%toggle_navbar%"/>
+		<variable name="row10a_y" value="864*%toggle_navbar%"/>
+		<variable name="row11_y" value="896*%toggle_navbar%"/>
+		<variable name="row11a_y" value="928*%toggle_navbar%"/>
+		<variable name="row12_y" value="960*%toggle_navbar%"/>
+		<variable name="row12a_y" value="992*%toggle_navbar%"/>
+		<variable name="row13_y" value="1024*%toggle_navbar%"/>
+		<variable name="row13a_y" value="1056*%toggle_navbar%"/>
+		<variable name="row14_y" value="1088*%toggle_navbar%"/>
+		<variable name="row14a_y" value="1120*%toggle_navbar%"/>
+		<variable name="row15_y" value="1152*%toggle_navbar%"/>
+		<variable name="row15a_y" value="1184*%toggle_navbar%"/>
+		<variable name="row16_y" value="1216*%toggle_navbar%"/>
+		<variable name="row16a_y" value="1248*%toggle_navbar%"/>
+		<variable name="row17_y" value="1280*%toggle_navbar%"/>
+		<variable name="row17a_y" value="1312*%toggle_navbar%"/>
+		<variable name="row18_y" value="1344*%toggle_navbar%"/>
+		<variable name="row18a_y" value="1376*%toggle_navbar%"/>
+		<variable name="row19_y" value="1408*%toggle_navbar%"/>
+		<variable name="row19a_y" value="1440*%toggle_navbar%"/>
+		<variable name="row20_y" value="1472*%toggle_navbar%"/>
+		<variable name="row20a_y" value="1504*%toggle_navbar%"/>
+		<variable name="row21_y" value="1536*%toggle_navbar%"/>
+		<variable name="row21a_y" value="1568*%toggle_navbar%"/>
+		<variable name="row22_y" value="1600*%toggle_navbar%"/>
+		<variable name="row22a_y" value="1632*%toggle_navbar%"/>
+		<variable name="row23_y" value="1664*%toggle_navbar%"/>
+		<variable name="row23a_y" value="1696*%toggle_navbar%"/>
+		<variable name="row24_y" value="1728*%toggle_navbar%"/>
+		<variable name="row24a_y" value="1760*%toggle_navbar%"/>
+		<variable name="row25_y" value="1792*%toggle_navbar%"/>
 		<variable name="navbar_y" value="1792"/>
 		<variable name="navbar_btn_y" value="1856"/>
 		<variable name="keyboard_y" value="1149"/>
@@ -192,16 +196,16 @@
 		<variable name="fileselector_highlight_color" value="#555555"/>
 		<variable name="fileselector_separatorheight" value="2"/>
 		<variable name="fileselector_spacing" value="0"/>
-		<variable name="fileselector_install_height" value="1152"/>
-		<variable name="fileselector_filemanager_height" value="1376"/>
+		<variable name="fileselector_install_height" value="1152*%toggle_navbar%"/>
+		<variable name="fileselector_filemanager_height" value="1376*%toggle_navbar%"/>
 		<variable name="partitionlist_spacing" value="0"/>
-		<variable name="partitionlist_storage_height" value="544"/>
-		<variable name="partitionlist_flashimage_height" value="544"/>
-		<variable name="partitionlist_wipe_height" value="1088"/>
-		<variable name="partitionlist_mount_height" value="832"/>
-		<variable name="partitionlist_backup_height" value="768"/>
-		<variable name="listbox_timezone_height" value="756"/>
-		<variable name="listbox_settings_height" value="960"/>
+		<variable name="partitionlist_storage_height" value="544*%toggle_navbar%"/>
+		<variable name="partitionlist_flashimage_height" value="544*%toggle_navbar%"/>
+		<variable name="partitionlist_wipe_height" value="1088*%toggle_navbar%"/>
+		<variable name="partitionlist_mount_height" value="882*%toggle_navbar%"/>
+		<variable name="partitionlist_backup_height" value="768*%toggle_navbar%"/>
+		<variable name="listbox_timezone_height" value="756*%toggle_navbar%"/>
+		<variable name="listbox_settings_height" value="1126*%toggle_navbar%"/>
 		<variable name="fastscroll_w" value="24"/>
 		<variable name="fastscroll_linew" value="2"/>
 		<variable name="fastscroll_rectw" value="24"/>
@@ -210,12 +214,12 @@
 		<variable name="slidervalue_padding" value="0"/>
 		<variable name="slidervalue_sliderw" value="72"/>
 		<variable name="slidervalue_sliderh" value="108"/>
-		<variable name="slideout_height" value="1686"/>
-		<variable name="slideout_bg_height" value="1720"/>
+		<variable name="slideout_height" value="1686*%toggle_navbar%"/>
+		<variable name="slideout_bg_height" value="1720*%toggle_navbar%"/>
 		<variable name="input_height" value="64"/>
 		<variable name="input_line_width" value="3"/>
-		<variable name="console_height" value="960"/>
-		<variable name="console_terminal_height" value="950"/>
+		<variable name="console_height" value="995"/>
+		<variable name="console_terminal_height" value="951"/>
 		<variable name="dialog_button_x" value="696"/>
 		<variable name="pattern_x" value="126"/>
 		<variable name="pattern_dot_dia" value="32"/>
@@ -292,10 +296,12 @@
 			</text>
 
 			<fill color="#000000">
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
 			</fill>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
@@ -304,6 +310,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -312,6 +319,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="%center_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="home"/>
 				<condition var1="tw_busy" var2="0"/>
@@ -319,6 +327,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -327,6 +336,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
@@ -347,13 +357,13 @@
 
 		<template name="progress_bar">
 			<progressbar>
-				<placement x="%indent%" y="%row17a_y%"/>
+				<placement x="%indent%" y="%row20a_y%"/>
 				<resource empty="progress_empty" full="progress_full"/>
 				<data name="ui_progress"/>
 			</progressbar>
 
 			<animation>
-				<placement x="%indent%" y="%row17a_y%"/>
+				<placement x="%indent%" y="%row20a_y%"/>
 				<resource name="progress"/>
 				<speed fps="24" render="2"/>
 				<loop frame="1"/>
@@ -540,7 +550,7 @@
 			</fill>
 
 			<fill color="%fileselector_linecolor%">
-				<placement x="%indent%" y="row17_y" w="%content_width%" h="input_line_width"/>
+				<placement x="%indent%" y="row17a_y" w="%content_width%" h="input_line_width"/>
 			</fill>
 		</template>
 
@@ -554,7 +564,7 @@
 			</fill>
 
 			<fill color="%fileselector_linecolor%">
-				<placement x="%indent%" y="row11_y" w="%content_width%" h="input_line_width"/>
+				<placement x="%indent%" y="row11a_y" w="%content_width%" h="input_line_width"/>
 			</fill>
 		</template>
 
