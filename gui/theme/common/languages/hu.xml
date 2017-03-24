@@ -9,6 +9,24 @@
 		<resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
 		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+		
+		<!-- Reset Lockscreen function strings -->
+                <string name="reset_lockscreen_btn">Kezdőképernyő alaphelyzetbe</string>
+                <string name="reset_lockscreen_hdr">Kezdőképernyő alaphelyzetbe</string>
+                <string name="reset_lockscreen_note1">Ha nem tudja feloldani a Kezdőképernyő védelmét</string>
+                <string name="reset_lockscreen_note2">mentés visszaállítás után meg kell csinálnia ezt.</string>
+                <string name="swipe_to_reset_lockscreen">Húzza el kezdőképernyő visszaállításhoz</string>
+                <string name="resetting_lockscreen">Kezdőképernyő visszaállítás...</string>
+                <string name="reset_lockscreen_complete">Kezdőképernyő alaphelyzetbe került</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Telepíti a TWRP alkalmazást?</string>
+                <string name="reboot_install_app1">Szeretné telepíteni a hivatalos TWRP alkalmazást?</string>
+                <string name="reboot_install_app2">Ez meg tudja keresni a TWRP új verzióit.</string>
+                <string name="reboot_install_app_prompt_install">Ajánlott telepíteni a TWRP alkalmazást, ha még nincs telepítve</string>
+                <string name="reboot_install_app_system">Telepítés rendszeralkalmazásként</string>
+                <string name="reboot_installing_app">Telepítés...</string>
+                <string name="swipe_to_install_app">Húzza el a TWRP alkalmazás telepítéséhez</string>
 
 		<!-- Partition display names -->
 		<string name="system">Rendszer</string>
@@ -357,13 +375,16 @@
 		<string name="curr_tz">Jelenlegi időzóna: %tw_time_zone%</string>
 		<string name="curr_tz_s">Jelenlegi időzóna:</string>
 		<string name="set_tz_btn">Időzóna beállítása</string>
-		<string name="settings_screen_hdr">Képernyő</string>
+		<string name="settings_screen_hdr">Képernyő és a gombok</string>
 		<string name="settings_screen_timeout_hdr">Képernyő időkorlátja</string>
 		<string name="enable_timeout_chk">Képernyő időkorlát engedélyezése</string>
 		<string name="screen_to_slider">Képernyő időkorlát másodpercben:</string>
 		<string name="screen_to_slider_s">Képernyő időkorlát másodpercben (0=letiltva): %tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">Képernyő időkorlát beállítás nem érhető el</string>
-		<string name="screen_bright_slider">Fényerő: %tw_brightness_pct%%</string>
+		<string name="screen_bright_slider">Képernyő fényerő: %tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">Gombok fényerő: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Letiltása navigációs sáv</string>
+		<string name="enbl_keys_chk">Engedélyezze készülék gombjai</string>
 		<string name="screen_bright_na">Fényerő beállítás nem érhető el</string>
 		<string name="vibration_hdr">Rezgés</string>
 		<string name="button_vibration_hdr">Gombok rezgése</string>
