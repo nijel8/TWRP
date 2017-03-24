@@ -6,6 +6,28 @@
         <resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
         <resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
         <resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+        
+        
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
+		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
+		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
+		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
+		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
+		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
+		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Install TWRP App?</string>
+		<string name="reboot_install_app1">Would you like to install the Official TWRP App?</string>
+		<string name="reboot_install_app2">The app can check for new TWRP versions.</string>
+		<string name="reboot_install_app_prompt_install">Prompt to install TWRP app if not installed</string>
+		<string name="reboot_install_app_system">Install as a System App</string>
+		<string name="reboot_installing_app">Installing App...</string>
+		<string name="swipe_to_install_app">Swipe to Install TWRP App</string>
+
+
+
         <string name="system">Système</string>
         <string name="system_image">Image Système</string>
         <string name="vendor">Fabricant</string>
@@ -332,13 +354,16 @@
         <string name="curr_tz">Fuseau horaire : %tw_time_zone%</string>
         <string name="curr_tz_s">Fuseau horaire :</string>
         <string name="set_tz_btn">Régler le fuseau horaire</string>
-        <string name="settings_screen_hdr">Paramètres d'écran</string>
+        <string name="settings_screen_hdr">Paramètres d'écran et des boutons</string>
         <string name="settings_screen_timeout_hdr">Mise en veille de l'écan</string>
         <string name="enable_timeout_chk">Activer la mise en veille</string>
         <string name="screen_to_slider">Délai avant mise en veille :</string>
         <string name="screen_to_slider_s">Délai avant mise en veille en secondes (0 = désactivé): %tw_screen_timeout_secs%</string>
         <string name="screen_to_na">Paramètre de mise en veille non disponible</string>
-        <string name="screen_bright_slider">Luminosité : %tw_brightness_pct% %</string>
+        <string name="screen_bright_slider">Luminosité d'écran : %tw_brightness_pct% %</string>
+		<string name="buttons_bright_slider">Luminosité de boutons: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Désactiver de la barre de navigation</string>
+		<string name="enbl_keys_chk">Activer les boutons du périphérique</string>
         <string name="screen_bright_na">Paramètre de luminosité non disponible</string>
         <string name="vibration_hdr">Vibration</string>
         <string name="button_vibration_hdr">Vibration des boutons</string>

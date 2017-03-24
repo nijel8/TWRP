@@ -9,6 +9,26 @@
 		<resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
 		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
+		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
+		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
+		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
+		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
+		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
+		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Install TWRP App?</string>
+		<string name="reboot_install_app1">Would you like to install the Official TWRP App?</string>
+		<string name="reboot_install_app2">The app can check for new TWRP versions.</string>
+		<string name="reboot_install_app_prompt_install">Prompt to install TWRP app if not installed</string>
+		<string name="reboot_install_app_system">Install as a System App</string>
+		<string name="reboot_installing_app">Installing App...</string>
+		<string name="swipe_to_install_app">Swipe to Install TWRP App</string>
+
+
+
 
 		<!-- Partition display names -->
 		<string name="system">System</string>
@@ -344,13 +364,17 @@
 		<string name="curr_tz">Obecna strefa czasowa: %tw_time_zone%</string>
 		<string name="curr_tz_s">Obecna strefa czasowa:</string>
 		<string name="set_tz_btn">Ustaw strefę czasową</string>
-		<string name="settings_screen_hdr">Ekran</string>
+		<string name="settings_screen_hdr">Ekranu i przycisków</string>
 		<string name="settings_screen_timeout_hdr">Wygaszanie ekranu</string>
 		<string name="enable_timeout_chk">Włącz wygaszanie ekranu</string>
 		<string name="screen_to_slider">Wygaszanie ekranu w sekundach:</string>
 		<string name="screen_to_slider_s">Wygaszanie ekranu w sekundach (0=wyłączone): %tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">Ustawienia wygaszania ekranu niedostępne</string>
-		<string name="screen_bright_slider">Jasność: %tw_brightness_pct%%</string>
+		<string name="screen_bright_slider">Jasność ekranu: %tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">Jasność przyciski: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Wyłącz paska nawigacji</string>
+		<string name="enbl_keys_chk">Włącz przycisków urządzenia</string>
+		
 		<string name="screen_bright_na">Ustawienia jasności ekranu niedostępne</string>
 		<string name="vibration_hdr">Wibracje</string>
 		<string name="button_vibration_hdr">Wibracje przycisków</string>
