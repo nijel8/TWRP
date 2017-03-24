@@ -108,6 +108,7 @@
 		</style>
 
 		<style name="scrolllist">
+		        <fastscroll rectcolor="%accent_color%" w="%fastscroll_w%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
 			<background color="%background_color%"/>
 			<font resource="font_m" spacing="%fileselector_spacing%" color="%text_color%"/>
 		</style>
@@ -174,7 +175,7 @@
 			<text style="text_m">
 				<condition var1="tw_no_cpu_temp" var2="0"/>
 				<placement x="%col1_x_header%" y="%row4_header_y%"/>
-				<text>%tw_version%</text>
+				<text>%tw_version% %tw_version_unofficial%</text>
 			</text>
 
 			<button style="main_button">
@@ -2143,17 +2144,17 @@
 			<template name="progress_bar"/>
 
 			<text style="text_m_accent">
-				<placement x="%indent%" y="%row19_y%"/>
+				<placement x="%indent%" y="%row18_y%"/>
 				<text>{@progress=Progress:}</text>
 			</text>
 
 			<text style="text_m">
-				<placement x="%indent%" y="%row20_y%"/>
+				<placement x="%indent%" y="%row19_y%"/>
 				<text>%tw_file_progress%</text>
 			</text>
 
 			<text style="text_m">
-				<placement x="%indent%" y="%row21_y%"/>
+				<placement x="%indent%" y="%row22_y%"/>
 				<text>%tw_size_progress%</text>
 			</text>
 
@@ -2557,12 +2558,12 @@
 			<template name="progress_bar"/>
 
 			<text style="text_m_accent">
-				<placement x="%indent%" y="%row19_y%"/>
+				<placement x="%indent%" y="%row18_y%"/>
 				<text>{@progress=Progress:}</text>
 			</text>
 
 			<text style="text_m">
-				<placement x="%indent%" y="%row20_y%"/>
+				<placement x="%indent%" y="%row19_y%"/>
 				<text>%tw_size_progress%</text>
 			</text>
 
@@ -2602,7 +2603,7 @@
 
 			<button style="checkbox">
 				<condition var1="tw_mount_system_ro" op="=" var2="0"/>
-				<placement x="%indent%" y="%row15a_y%" textplacement="6"/>
+				<placement x="%indent%" y="%row16_y%" textplacement="6"/>
 				<text>{@mount_sys_ro_chk=Mount system partition read-only}</text>
 				<image resource="checkbox_false"/>
 				<action function="mountsystemtoggle">1</action>
@@ -2610,7 +2611,7 @@
 
 			<button style="checkbox">
 				<condition var1="tw_mount_system_ro" op="!=" var2="0"/>
-				<placement x="%indent%" y="%row15a_y%" textplacement="6"/>
+				<placement x="%indent%" y="%row16_y%" textplacement="6"/>
 				<text>{@mount_sys_ro_chk=Mount system partition read-only}</text>
 				<image resource="checkbox_true"/>
 				<actions>
@@ -3085,8 +3086,15 @@
 				<listitem name="{@use24clock_chk=Use 24-hour clock}">
 					<data variable="tw_military_time"/>
 				</listitem>
+				<listitem name="{@dis_navbar_chk=Disable navbar}">
+					<data variable="tw_disable_navbar"/>
+				</listitem>
 				<listitem name="{@rev_navbar_chk=Reversed navbar layout}">
+				        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 					<data variable="tw_samsung_navbar"/>
+				</listitem>
+				<listitem name="{@enbl_keys_chk=Enable device buttons}">
+					<data variable="tw_enable_keys"/>
 				</listitem>
 				<listitem name="{@reboot_install_app_prompt_install=Prompt to install TWRP app on every reboot}">
 					<data variable="tw_app_prompt"/>
@@ -3104,9 +3112,8 @@
 				<placement x="%center_x%" y="%row21a_y%"/>
 				<text>{@restore_defaults_btn=Restore Defaults}</text>
 				<actions>
-					<action function="set">tw_samsung_navbar=0</action>
-					<action function="set">tw_tab_icons=0</action>
 					<action function="restoredefaultsettings"/>
+					<action function="reload"/>
 				</actions>
 			</button>
 
@@ -3283,13 +3290,26 @@
 			<slidervalue>
 				<condition var1="tw_has_brightnesss_file" var2="1"/>
 				<placement x="indent" y="%row10_y%" w="%content_width%"/>
-				<text>{@screen_bright_slider=Brightness: %tw_brightness_pct%%}</text>
+				<text>{@screen_bright_slider=Screen brightness: %tw_brightness_pct%%}</text>
 				<data variable="tw_brightness_pct" min="10" max="100"/>
 				<actions>
 					<action function="set">tw_brightness=%tw_brightness_max%</action>
 					<action function="compute">tw_brightness*%tw_brightness_pct%</action>
 					<action function="compute">tw_brightness/100</action>
 					<action function="setbrightness">%tw_brightness%</action>
+				</actions>
+			</slidervalue>
+
+			<slidervalue>
+				<condition var1="tw_enable_keys" var2="1"/>
+				<placement x="indent" y="%row15_y%" w="%content_width%"/>
+				<text>{@buttons_bright_slider=Buttons brightness: %tw_btn_brightness_pct%%}</text>
+				<data variable="tw_btn_brightness_pct" min="0" max="100"/>
+				<actions>
+				        <action function="set">tw_btn_brightness=40</action>
+					<action function="compute">tw_btn_brightness*%tw_btn_brightness_pct%</action>
+					<action function="compute">tw_btn_brightness/100</action>
+					<action function="setbtnbrightness">%tw_btn_brightness%</action>
 				</actions>
 			</slidervalue>
 
@@ -3486,6 +3506,14 @@
 				<placement x="%indent%" y="%row19_y%"/>
 				<text>{@adb_sideload_btn=ADB Sideload}</text>
 				<action function="page">sideload</action>
+			</button>
+
+			<button style="main_button">
+				<condition var1="tw_show_dumlock" op="!=" var2="1"/>
+				<condition var1="tw_has_injecttwrp" op="!=" var2="1"/>
+				<placement x="%center_x%" y="%row19_y%"/>
+				<text>{@reset_lockscreen_btn=Reset Lockscreen}</text>
+				<action function="page">resetlockscreen</action>
 			</button>
 
 			<button style="main_button">
@@ -3781,6 +3809,16 @@
 			<slider>
 				<text>{@swipe_to_unlock=Swipe to Unlock}</text>
 				<action function="overlay"/>
+				<condition var1="tw_screen_lock" op="!=" var2="1"/>
+			</slider>
+
+			<slider>
+				<text>{@swipe_to_unlock=Swipe to Unlock}</text>
+				<action function="overlay"/>
+				<condition var1="tw_screen_lock" var2="1"/>
+			        <action function="set">tw_enable_keys=1</action>
+			        <action function="setbtnbrightness">%tw_btn_brightness%</action>
+			        <action function="set">tw_screen_lock=0</action>
 			</slider>
 
 			<action>
@@ -4493,25 +4531,9 @@
 
 			<template name="keyboardtemplate"/>
 
-			<fill color="#000000">
-				<placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%" />
-			</fill>
-
 			<button>
-				<condition var1="tw_samsung_navbar" op="!=" var2="1" />
-				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4" />
-				<image resource="back" />
-				<condition var1="tw_busy" var2="0" />
-				<actions>
-					<action function="set">tw_hide_kb=0</action>
-					<action function="key">back</action>
-				</actions>
-			</button>
-
-			<button>
-				<condition var1="tw_samsung_navbar" op="=" var2="1" />
 				<condition var1="tw_hide_kb" op="=" var2="0" />
-				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4" />
+				<placement x="590" y="0"/>
 				<image resource="kb_hide" />
 				<condition var1="tw_busy" var2="0" />
 				<actions>
@@ -4521,9 +4543,8 @@
 			</button>
 
 			<button>
-				<condition var1="tw_samsung_navbar" op="=" var2="1" />
 				<condition var1="tw_hide_kb" op="=" var2="1" />
-				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4" />
+				<placement x="590" y="0"/>
 				<image resource="kb_show" />
 				<condition var1="tw_busy" var2="0" />
 				<actions>
@@ -4532,52 +4553,7 @@
 				</actions>
 			</button>
 
-			<button>
-				<placement x="%center_x%" y="%navbar_btn_y%" placement="4" />
-				<image resource="home" />
-				<condition var1="tw_busy" var2="0" />
-				<actions>
-					<action function="set">tw_hide_kb=0</action>
-					<action function="key">home</action>
-				</actions>
-			</button>
-
-			<button>
-				<condition var1="tw_samsung_navbar" op="!=" var2="1" />
-				<condition var1="tw_hide_kb" op="=" var2="0" />
-				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4" />
-				<image resource="kb_hide" />
-				<condition var1="tw_busy" var2="0" />
-				<actions>
-					<action function="set">tw_hide_kb=1</action>
-					<action function="page">terminalcommand</action>
-				</actions>
-			</button>
-
-			<button>
-				<condition var1="tw_samsung_navbar" op="!=" var2="1" />
-				<condition var1="tw_hide_kb" op="=" var2="1" />
-				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4" />
-				<image resource="kb_show" />
-				<condition var1="tw_busy" var2="0" />
-				<actions>
-					<action function="set">tw_hide_kb=0</action>
-					<action function="page">terminalcommand</action>
-				</actions>
-			</button>
-
-			<button>
-				<condition var1="tw_samsung_navbar" op="=" var2="1" />
-				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4" />
-				<image resource="back" />
-				<condition var1="tw_busy" var2="0" />
-				<actions>
-					<action function="set">tw_hide_kb=0</action>
-					<action function="key">back</action>
-				</actions>
-			</button>
-
-			<action>
+		<action>
 				<touch key="home"/>
 				<actions>
 					<action function="set">tw_hide_kb=0</action>
@@ -4702,6 +4678,58 @@
 			</action>
 		</page>
 
+		<page name="resetlockscreen">
+			<template name="page"/>
+
+			<text style="text_l">
+				<placement x="%col1_x_header%" y="%row3_header_y%"/>
+				<text>{@advanced_hdr=Advanced}</text>
+			</text>
+
+			<text style="text_m">
+				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<text>{@reset_lockscreen_hdr=Reset Lockscreen}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<placement x="%center_x%" y="%row6_y%" placement="5"/>
+				<text>{@reset_lockscreen_note1=If you cannot pass Lockscreen security}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<placement x="%center_x%" y="%row7_y%" placement="5"/>
+				<text>{@reset_lockscreen_note2=after backup restore you should do this.}</text>
+			</text>
+
+			<slider>
+				<text>{@swipe_to_reset_lockscreen=Swipe to Reset Lockscreen}</text>
+				<actions>
+					<action function="set">tw_back=advanced</action>
+					<action function="set">tw_action=resetlockscreen</action>
+					<action function="set">tw_action_text1={@resetting_lockscreen=Resetting Lockscreen...}</action>
+					<action function="set">tw_complete_text1={@reset_lockscreen_complete=Reset Lockscreen Complete}</action>
+					<action function="set">tw_slider_text={@swipe_to_confirm=Swipe to Confirm}</action>
+					<action function="set">tw_show_reboot=1</action>
+					<action function="page">action_page</action>
+				</actions>
+			</slider>
+
+			<action>
+				<touch key="home"/>
+				<action function="page">main</action>
+			</action>
+
+			<action>
+				<touch key="back"/>
+				<action function="page">advanced</action>
+			</action>
+		</page>
+		
+		
+		
+		
+		
+
 		<page name="installsu">
 			<template name="page"/>
 
@@ -4789,7 +4817,7 @@
 			</partitionlist>
 
 			<button style="button_third_width">
-				<placement x="%dialog_button_x%" y="%row14_y%"/>
+				<placement x="%dialog_button_x%" y="1088"/>
 				<text>{@ok_btn=OK}</text>
 				<actions>
 					<action function="set">tw_clear_destination=%tw_back%</action>
@@ -4799,10 +4827,12 @@
 			</button>
 
 			<fill color="#000000">
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="0" y="row25_y" w="%screen_width%" h="%navbar_height"/>
 			</fill>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
@@ -4814,6 +4844,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -4822,6 +4853,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="%center_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="home"/>
 				<condition var1="tw_busy" var2="0"/>
@@ -4832,6 +4864,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -4840,6 +4873,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
@@ -4882,10 +4916,12 @@
 			</button>
 
 			<fill color="#000000">
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="0" y="row25_y" w="%screen_width%" h="%navbar_height"/>
 			</fill>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
@@ -4897,6 +4933,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%back_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -4905,6 +4942,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<placement x="%center_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="home"/>
 				<condition var1="tw_busy" var2="0"/>
@@ -4915,6 +4953,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="!=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="console"/>
@@ -4923,6 +4962,7 @@
 			</button>
 
 			<button>
+			        <condition var1="tw_disable_navbar" op="!=" var2="1"/>
 				<condition var1="tw_samsung_navbar" op="=" var2="1"/>
 				<placement x="%console_button_x%" y="%navbar_btn_y%" placement="4"/>
 				<image resource="back"/>
