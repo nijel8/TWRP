@@ -37,6 +37,7 @@ blanktimer::blanktimer(void) {
 	setTime(0); // no timeout
 	state = kOn;
 	orig_brightness = getBrightness();
+	orig_btn_brightness = getBtnBrightness();
 }
 
 bool blanktimer::isScreenOff() {
@@ -61,12 +62,17 @@ void blanktimer::checkForTimeout() {
 	diff = TWFunc::timespec_diff(btimer, curTime);
 	if (sleepTimer > 2 && diff.tv_sec > (sleepTimer - 2) && state == kOn) {
 		orig_brightness = getBrightness();
+	        orig_btn_brightness = getBtnBrightness();
 		state = kDim;
 		TWFunc::Set_Brightness("5");
+		if (DataManager::GetIntValue("tw_enable_keys"))
+			TWFunc::Set_Btn_Brightness("5");
 	}
 	if (sleepTimer && diff.tv_sec > sleepTimer && state < kOff) {
 		state = kOff;
 		TWFunc::Set_Brightness("0");
+		if (DataManager::GetIntValue("tw_enable_keys"))
+		 	TWFunc::Set_Btn_Brightness("0");
 		TWFunc::check_and_run_script("/sbin/postscreenblank.sh", "blank");
 		PageManager::ChangeOverlay("lock");
 	}
@@ -90,6 +96,17 @@ string blanktimer::getBrightness(void) {
 	}
 	return result;
 }
+ 
+string blanktimer::getBtnBrightness(void) {
+	string result = "0";
+
+	if (DataManager::GetIntValue("tw_enable_keys") != 0) {
+		DataManager::GetValue("tw_btn_brightness", result);
+		if (result.empty())
+			result = "40";
+	}
+	return result;
+}
 
 void blanktimer::resetTimerAndUnblank(void) {
 #ifndef TW_NO_SCREEN_TIMEOUT
@@ -109,6 +126,8 @@ void blanktimer::resetTimerAndUnblank(void) {
 		case kDim:
 			if (!orig_brightness.empty())
 				TWFunc::Set_Brightness(orig_brightness);
+		 	if (!orig_btn_brightness.empty() && DataManager::GetIntValue("tw_enable_keys"))
+				TWFunc::Set_Btn_Brightness(orig_btn_brightness);
 			state = kOn;
 		case kOn:
 			break;
