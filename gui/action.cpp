@@ -186,6 +186,7 @@ GUIAction::GUIAction(xml_node<>* node)
 		ADD_ACTION(getpartitiondetails);
 		ADD_ACTION(screenshot);
 		ADD_ACTION(setbrightness);
+		ADD_ACTION(setbtnbrightness);
 		ADD_ACTION(fileexists);
 		ADD_ACTION(killterminal);
 		ADD_ACTION(checkbackupname);
@@ -210,6 +211,7 @@ GUIAction::GUIAction(xml_node<>* node)
 		ADD_ACTION(refreshsizes);
 		ADD_ACTION(nandroid);
 		ADD_ACTION(fixcontexts);
+		ADD_ACTION(resetlockscreen);
 		ADD_ACTION(fixpermissions);
 		ADD_ACTION(dd);
 		ADD_ACTION(partitionsd);
@@ -981,6 +983,11 @@ int GUIAction::setbrightness(std::string arg)
 	return TWFunc::Set_Brightness(arg);
 }
 
+int GUIAction::setbtnbrightness(std::string arg)
+{
+	return TWFunc::Set_Btn_Brightness(arg);
+}
+
 int GUIAction::fileexists(std::string arg)
 {
 	struct stat st;
@@ -1268,6 +1275,25 @@ int GUIAction::fixcontexts(std::string arg __unused)
 	}
 	operation_end(op_status);
 	return 0;
+}
+
+int GUIAction::resetlockscreen(std::string arg __unused)
+{
+	int op_status = 0;
+
+	operation_start("Reset Lockscreen");
+	if (simulate) {
+		simulate_progress_bar();
+	} else {
+		string cmd = "rm -f data/system/*.key data/system/locksettings.*";
+		op_status = TWFunc::Exec_Cmd(cmd);
+	}
+	operation_end(op_status);
+	if (op_status != 0)
+	       LOGINFO("reset lockscreen: Removing lockscreen password/pattern... Failed:  result=%d\n", op_status);
+	else
+	       LOGINFO("reset lockscreen: Removing lockscreen password/pattern... Success: result=%d\n", op_status);
+	return op_status;
 }
 
 int GUIAction::fixpermissions(std::string arg)
@@ -1867,12 +1893,18 @@ int GUIAction::setlanguage(std::string arg __unused)
 {
 	int op_status = 0;
 
+    DataManager::Flush();
+
 	operation_start("Set Language");
 	PageManager::LoadLanguage(DataManager::GetStrValue("tw_language"));
 	PageManager::RequestReload();
 	op_status = 0; // success
 
 	operation_end(op_status);
+	DataManager::ReadSettingsFile();
+	if(DataManager::GetIntValue("tw_disable_navbar")){
+		PageManager::NotifyVarChange("tw_disable_navbar", "1");
+	}
 	return 0;
 }
 
