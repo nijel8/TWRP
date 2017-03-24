@@ -999,6 +999,7 @@ int PageSet::LoadVariables(xml_node<>* vars)
 	xml_node<>* child;
 	xml_attribute<> *name, *value, *persist;
 	int p;
+	bool kb_offset;
 
 	child = vars->first_node("variable");
 	while (child)
@@ -1030,6 +1031,15 @@ int PageSet::LoadVariables(xml_node<>* vars)
 			}
 			p = persist ? atoi(persist->value()) : 0;
 			string temp = value->value();
+			if (strcmp(name->value(), "toggle_navbar") == 0) {
+			        DataManager::ReadSettingsFile();
+			        if (!DataManager::GetIntValue("tw_disable_navbar")){
+		                         kb_offset = false;
+		                         temp = "1";
+		                } else{
+		                         kb_offset = true;
+		                }
+			}
 			string valstr = gui_parse_text(temp);
 
 			if (valstr.find("+") != string::npos) {
@@ -1052,7 +1062,28 @@ int PageSet::LoadVariables(xml_node<>* vars)
 				int val = val1 - val2;
 
 				DataManager::SetValue(name->value(), val, p);
+			} else if (valstr.find("*") != string::npos) {
+				string val1str = valstr;
+				val1str = val1str.substr(0, val1str.find('*'));
+				string val2str = valstr;
+				val2str = val2str.substr(val2str.find('*') + 1, string::npos);
+				int val = (int)(atof(val1str.c_str()) * atof(val2str.c_str()) + 0.5);
+
+				DataManager::SetValue(name->value(), val, p);
 			} else {
+				if (strcmp(name->value(), "keyboard_y") == 0 && kb_offset) {
+		                       valstr = "1276";
+			        }
+			       if (strcmp(name->value(), "keyboard_terminal_y") == 0 && kb_offset) {
+		                       valstr = "1180";
+			       }
+			       if (strcmp(name->value(), "console_height") == 0 && kb_offset) {
+		                       valstr = "1089";
+			       }
+			       if (strcmp(name->value(), "console_terminal_height") == 0 && kb_offset) {
+		                       valstr = "1078";
+			       }
+
 				DataManager::SetValue(name->value(), valstr, p);
 			}
 		}
@@ -1568,6 +1599,13 @@ int PageManager::ChangeOverlay(std::string name)
 	else
 	{
 		Page* page = mCurrentSet ? mCurrentSet->FindPage(name) : NULL;
+		if(name == "lock"){
+			if(DataManager::GetIntValue("tw_enable_keys")){
+				TWFunc::Set_Btn_Brightness("0");
+				DataManager::SetValue("tw_enable_keys", "0");
+				DataManager::SetValue("tw_screen_lock", "1");
+			}
+		}
 		return mCurrentSet->SetOverlay(page);
 	}
 }
