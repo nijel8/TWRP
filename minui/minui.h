@@ -17,7 +17,7 @@
 #ifndef _MINUI_H_
 #define _MINUI_H_
 
-#ifndef TW_USE_OLD_MINUI_H
+#ifndef TW_USE_MINUI_21
 
 #include <sys/types.h>
 
@@ -55,13 +55,19 @@ void gr_color(unsigned char r, unsigned char g, unsigned char b, unsigned char a
 void gr_fill(int x1, int y1, int x2, int y2);
 
 void gr_texticon(int x, int y, GRSurface* icon);
+#ifdef TW_NO_MINUI_CUSTOM_FONTS
+void gr_text(int x, int y, const char *s, bool bold);
+int gr_measure(const char *s);
+void gr_font_size(int *x, int *y);
+void gr_set_font(__attribute__ ((unused))const char* name);
+#else
 
 const GRFont* gr_sys_font();
 int gr_init_font(const char* name, GRFont** dest);
 void gr_text(const GRFont* font, int x, int y, const char *s, bool bold);
 int gr_measure(const GRFont* font, const char *s);
 void gr_font_size(const GRFont* font, int *x, int *y);
-void gr_set_font(__attribute__ ((unused))const char* name);
+#endif
 
 void gr_blit(GRSurface* source, int sx, int sy, int w, int h, int dx, int dy);
 unsigned int gr_get_width(GRSurface* surface);
@@ -137,9 +143,9 @@ int res_create_localized_alpha_surface(const char* name, const char* locale,
 // functions.
 void res_free_surface(GRSurface* surface);
 
-#else //ifndef TW_USE_OLD_MINUI_H
+#else //ifndef TW_USE_MINUI_21
 
-// This the old minui.old/minui.h for compatibility with building TWRP
+// This the old minui21/minui.h for compatibility with building TWRP
 // in pre 6.0 trees.
 
 #include <stdbool.h>
@@ -227,5 +233,5 @@ void gr_clear();
 }
 #endif
 
-#endif // ifndef TW_USE_OLD_MINUI_H
+#endif // ifndef TW_USE_MINUI_21
 #endif // ifndef _MINUI_H_
