@@ -344,7 +344,8 @@ public:
 	void Add_Partition(TWPartition* Part);                                    // Adds a new partition to the Partitions vector
 
 private:
-	void Setup_Settings_Storage_Partition(TWPartition* Part);                 // Sets up settings storage
+	void Setup_Settings_Partition(TWPartition* setting_partition);            // Sets up settings storage
+	void Setup_Storage_Partition(TWPartition* storage_partition);             // Sets up storage path
 	void Setup_Android_Secure_Location(TWPartition* Part);                    // Sets up .android_secure if needed
 	bool Backup_Partition(struct PartitionSettings *part_settings);           // Backup the partitions based on type
 	TWPartition* Find_Partition_By_MTP_Storage_ID(unsigned int Storage_ID);   // Returns a pointer to a partition based on MTP Storage ID
