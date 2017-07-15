@@ -301,7 +301,8 @@ public:
 	void Setup_Dalvik_Excl();                                                 // Used to determine if option to skip dalvik-cache from backup will be available
 
 private:
-	void Setup_Settings_Storage_Partition(TWPartition* Part);                 // Sets up settings storage
+	void Setup_Settings_Partition(TWPartition* setting_partition);            // Sets up settings storage
+	void Setup_Storage_Partition(TWPartition* storage_partition);             // Sets up storage path
 	void Setup_Android_Secure_Location(TWPartition* Part);                    // Sets up .android_secure if needed
 	bool Backup_Partition(struct PartitionSettings *part_settings);           // Backup the partitions based on type
 	void Output_Partition(TWPartition* Part);                                 // Outputs partition details to the log
