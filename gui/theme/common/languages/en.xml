@@ -613,6 +613,9 @@
 		<string name="digest_matched" version="2">Digest matched for '{1}'.</string>
 		<string name="fail_decrypt_tar">Failed to decrypt tar file '{1}'</string>
 		<string name="format_data_msg">You may need to reboot recovery to be able to use /data again.</string>
+		<string name="old_binary_msg">Old update-binary: Retry in legacy property environment...</string>
+		<string name="ignore_errors_msg">Ignore first try errors if script succeeds...</string>
+		<string name="wtf_msg">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</string>
 		<string name="format_data_err">Unable to format to remove encryption.</string>
 		<string name="formatting_using">Formatting {1} using {2}...</string>
 		<string name="unable_to_wipe">Unable to wipe {1}.</string>
