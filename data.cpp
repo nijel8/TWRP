@@ -843,6 +843,10 @@ void DataManager::SetDefaultValues()
 	mConst.SetValue("tw_has_boot_slots", "0");
 #endif
 
+#ifdef TW_NO_LEGACY_PROPS
+	LOGINFO("TW_NO_LEGACY_PROPS := true\n");
+#endif
+
 #ifdef TW_OEM_BUILD
 	LOGINFO("TW_OEM_BUILD := true\n");
 	mConst.SetValue("tw_oem_build", "1");
