@@ -302,37 +302,8 @@ static int Run_Update_Binary(const char *path, ZipArchive *Zip, int* wipe_cache,
 	}
 #endif
 
-        if (waitrc == 7) {
-			  if (!legacy_props_path_modified) {
-		        /* Set legacy properties */
-	                if (switch_to_legacy_properties() != 0) {
-		                LOGERR("Legacy property environment did not initialize successfully. Properties may not be detected.\n");
-	                } else {
-		                LOGINFO("Legacy property environment initialized.\n");
-                                gui_warn("wtf_msg=!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                                gui_warn("old_binary_msg=Old update-binary: Retry in legacy property environment...");
-                                gui_warn("ignore_errors_msg=Ignore first try errors if script succeeds...");
-                                gui_warn("wtf_msg=!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		                TWinstall_zip(path, wipe_cache);
-		                /* Unset legacy properties */
-	                        if (legacy_props_path_modified) {
-		                        if (switch_to_new_properties() != 0) {
-		                        	LOGERR("Legacy property environment did not disable successfully. Legacy properties may still be in use.\n");
-		                        } else {
-		                        	LOGINFO("Legacy property environment disabled.\n");
-		                        }
-                                        if (waitrc != 0)
-                                                return INSTALL_ERROR;
-		                        else
-		                                return INSTALL_SUCCESS;
-	                        }
-                     }
-			  }
-        }
-
 	if (waitrc != 0)
 		return INSTALL_ERROR;
-		
 
 	return INSTALL_SUCCESS;
 }

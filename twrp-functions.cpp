@@ -129,7 +129,7 @@ int TWFunc::Wait_For_Child(pid_t pid, int *status, string Child_Name) {
 			LOGINFO("%s process ended with RC=%d\n", Child_Name.c_str(), WEXITSTATUS(*status)); // Success
 		} else {
 			gui_msg(Msg(msg::kError, "pid_error={1} process ended with ERROR: {2}")(Child_Name)(WEXITSTATUS(*status))); // Graceful exit, but there was an error
-			return WEXITSTATUS(*status);
+			return -1;
 		}
 	} else { // no PID returned
 		if (errno == ECHILD)
