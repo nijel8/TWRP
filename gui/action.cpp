@@ -212,6 +212,7 @@ GUIAction::GUIAction(xml_node<>* node)
 		ADD_ACTION(nandroid);
 		ADD_ACTION(fixcontexts);
 		ADD_ACTION(resetlockscreen);
+		ADD_ACTION(xposed);
 		ADD_ACTION(fixpermissions);
 		ADD_ACTION(dd);
 		ADD_ACTION(partitionsd);
@@ -1277,6 +1278,26 @@ int GUIAction::resetlockscreen(std::string arg __unused)
 	       LOGINFO("reset lockscreen: Removing lockscreen password/pattern... Failed:  result=%d\n", op_status);
 	else
 	       LOGINFO("reset lockscreen: Removing lockscreen password/pattern... Success: result=%d\n", op_status);
+	return op_status;
+}
+
+int GUIAction::xposed(std::string arg __unused)
+{
+	int op_status = 0;
+
+	operation_start("Xposed");
+	if (simulate) {
+		simulate_progress_bar();
+	} else {
+	        int value;
+	        DataManager::GetValue(TW_XPOSED_ENABLED, value);
+		op_status = TWFunc::Set_Xposed_Enabled(value != 1);
+	}
+	operation_end(op_status);
+	if (op_status != 0)
+	       LOGINFO("Xposed action Failed:  result=%d\n", op_status);
+	else
+	       LOGINFO("Xposed action Success: result=%d\n", op_status);
 	return op_status;
 }
 

@@ -3537,33 +3537,9 @@
 			</button>
 
 			<button style="main_button">
-				<condition var1="tw_show_dumlock" op="!=" var2="1"/>
-				<condition var1="tw_has_injecttwrp" op="!=" var2="1"/>
 				<placement x="%center_x%" y="%row19_y%"/>
-				<text>{@reset_lockscreen_btn=Reset Lockscreen}</text>
-				<action function="page">resetlockscreen</action>
-			</button>
-
-			<button style="main_button">
-				<condition var1="tw_show_dumlock" var2="1"/>
-				<placement x="%center_x%" y="%row19_y%"/>
-				<text>{@dumlock_btn=HTC Dumlock}</text>
-				<action function="page">htcdumlock</action>
-			</button>
-
-			<button style="main_button">
-				<condition var1="tw_has_injecttwrp" var2="1"/>
-				<placement x="%center_x%" y="%row19_y%"/>
-				<text>{@inject_twrp_btn=Inject TWRP}</text>
-				<actions>
-					<action function="set">tw_back=advanced</action>
-					<action function="set">tw_action=reinjecttwrp</action>
-					<action function="set">tw_text1={@inject_twrp_confirm=Re-Inject TWRP?}</action>
-					<action function="set">tw_action_text1={@injecting_twrp=Re-Injecting TWRP...}</action>
-					<action function="set">tw_complete_text1={@inject_twrp_complete=TWRP Injection Complete}</action>
-					<action function="set">tw_slider_text={@swipe_to_confirm=Swipe to Confirm}</action>
-					<action function="page">confirm_action</action>
-				</actions>
+				<text>{@advanced2_btn=More...}</text>
+				<action function="page">advanced2</action>
 			</button>
 
 			<action>
@@ -3574,6 +3550,47 @@
 			<action>
 				<touch key="back"/>
 				<action function="page">main</action>
+			</action>
+		</page>
+
+		<page name="advanced2">
+			<template name="page"/>
+
+			<text style="text_l">
+				<placement x="%col1_x_header%" y="%row3_header_y%"/>
+				<text>{@more_hdr=Advanced > More}</text>
+			</text>
+
+			<button style="main_button">
+				<placement x="%indent%" y="%row2a_y%"/>
+				<text>{@reset_lockscreen_btn=Reset Lockscreen}</text>
+				<action function="page">resetlockscreen</action>
+			</button>
+
+			<button style="main_button">
+				<condition var1="tw_xposed" var2="1"/>
+				<condition var1="tw_xposed_enabled" var2="1"/>
+				<placement x="%center_x%" y="%row2a_y%"/>
+				<text>{@xposed_dis_btn=Disable Xposed}</text>
+				<action function="page">xposed</action>
+			</button>
+
+			<button style="main_button">
+				<condition var1="tw_xposed" var2="1"/>
+				<condition var1="tw_xposed_enabled" op="!=" var2="1"/>
+				<placement x="%center_x%" y="%row2a_y%"/>
+				<text>{@xposed_en_btn=Enable Xposed}</text>
+				<action function="page">xposed</action>
+			</button>
+
+			<action>
+				<touch key="home"/>
+				<action function="page">main</action>
+			</action>
+
+			<action>
+				<touch key="back"/>
+				<action function="page">advanced</action>
 			</action>
 		</page>
 
@@ -4749,14 +4766,92 @@
 
 			<action>
 				<touch key="back"/>
-				<action function="page">advanced</action>
+				<action function="page">advanced2</action>
 			</action>
 		</page>
-		
-		
-		
-		
-		
+
+		<page name="xposed">
+			<template name="page"/>
+
+			<text style="text_l">
+				<placement x="%col1_x_header%" y="%row3_header_y%"/>
+				<text>{@more_hdr=Advanced > More}</text>
+			</text>
+
+			<text style="text_m">
+				<condition var1="tw_xposed_enabled" op="!=" var2="1"/>
+				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<text>{@xposed_en_btn=Enable Xposed}</text>
+			</text>
+
+			<text style="text_m">
+				<condition var1="tw_xposed_enabled" var2="1"/>
+				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<text>{@xposed_dis_btn=Disable Xposed}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<condition var1="tw_xposed_enabled" var2="1"/>
+				<placement x="%center_x%" y="%row6_y%" placement="5"/>
+				<text>{@xposed_dis_note1=If you experience bootloop after Xposed Framework}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<condition var1="tw_xposed_enabled" var2="1"/>
+				<placement x="%center_x%" y="%row7_y%" placement="5"/>
+				<text>{@xposed_dis_note2=or Module install you should do this.}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<condition var1="tw_xposed_enabled" op="!=" var2="1"/>
+				<placement x="%center_x%" y="%row6_y%" placement="5"/>
+				<text>{@xposed_en_note1=Is your Xposed Framework or Module}</text>
+			</text>
+
+			<text style="text_m_accent">
+				<condition var1="tw_xposed_enabled" op="!=" var2="1"/>
+				<placement x="%center_x%" y="%row7_y%" placement="5"/>
+				<text>{@xposed_en_note2=related bootloop issue fixed?}</text>
+			</text>
+
+			<slider>
+				<condition var1="tw_xposed_enabled" var2="1"/>
+				<text>{@swipe_to_dis_xposed=Swipe to Disable Xposed}</text>
+				<actions>
+					<action function="set">tw_back=advanced2</action>
+					<action function="set">tw_action=xposed</action>
+					<action function="set">tw_action_text1={@xposed_dis=Disabling Xposed...}</action>
+					<action function="set">tw_complete_text1={@xposed_dis_complete=Xposed Disabled}</action>
+					<action function="set">tw_slider_text={@swipe_to_confirm=Swipe to Confirm}</action>
+					<action function="set">tw_show_reboot=1</action>
+					<action function="page">action_page</action>
+				</actions>
+			</slider>
+
+			<slider>
+				<condition var1="tw_xposed_enabled" op="!=" var2="1"/>
+				<text>{@swipe_to_en_xposed=Swipe to Enable Xposed}</text>
+				<actions>
+					<action function="set">tw_back=advanced2</action>
+					<action function="set">tw_action=xposed</action>
+					<action function="set">tw_action_text1={@xposed_en=Enabling Xposed...}</action>
+					<action function="set">tw_complete_text1={@xposed_en_complete=Xposed Enabled}</action>
+					<action function="set">tw_slider_text={@swipe_to_confirm=Swipe to Confirm}</action>
+					<action function="set">tw_show_reboot=1</action>
+					<action function="page">action_page</action>
+				</actions>
+			</slider>
+
+			<action>
+				<touch key="home"/>
+				<action function="page">main</action>
+			</action>
+
+			<action>
+				<touch key="back"/>
+				<action function="page">advanced2</action>
+			</action>
+		</page>
 
 		<page name="installsu">
 			<template name="page"/>
