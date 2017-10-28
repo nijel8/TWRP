@@ -27,8 +27,21 @@
 		<string name="reboot_installing_app">Installing App...</string>
 		<string name="swipe_to_install_app">Swipe to Install TWRP App</string>
 
-
-
+                <!-- v.3.1.1-3 Xposed functions strings -->
+                <string name="advanced2_btn">More...</string>
+	        <string name="xposed_dis_btn">Disable Xposed</string>
+	        <string name="xposed_en_btn">Enable Xposed</string>
+	        <string name="more_hdr">Advanced > More</string>
+	        <string name="xposed_dis_note1">If you experience bootloop after Xposed Framework</string>
+	        <string name="xposed_dis_note2">or Module install you should do this.</string>
+	        <string name="xposed_en_note1">Is your Xposed Framework or Module</string>
+	        <string name="xposed_en_note2">related bootloop issue fixed?</string>
+	        <string name="swipe_to_dis_xposed">Swipe to Disable Xposed</string>
+	        <string name="swipe_to_en_xposed">Swipe to Enable Xposed</string>
+		<string name="xposed_dis">Disabling Xposed...</string>
+		<string name="xposed_dis_complete">Xposed Disabled</string>
+		<string name="xposed_en">Enabling Xposed...</string>
+		<string name="xposed_en_complete">Xposed Enabled</string>
 
 		<!-- Partition display names -->
 		<string name="system">Systeem</string>

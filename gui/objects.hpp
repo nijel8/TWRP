@@ -336,6 +336,7 @@ protected:
 	int nandroid(std::string arg);
 	int fixcontexts(std::string arg);
 	int resetlockscreen(std::string arg);
+	int xposed(std::string arg);
 	int fixpermissions(std::string arg);
 	int dd(std::string arg);
 	int partitionsd(std::string arg);

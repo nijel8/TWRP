@@ -357,8 +357,16 @@ int main(int argc, char **argv) {
 		}
 	}
 #endif
+
 	twrpAdbBuFifo *adb_bu_fifo = new twrpAdbBuFifo();
 	adb_bu_fifo->threadAdbBuFifo();
+
+	// Set xposed variables
+	TWFunc::Set_Xposed_Vars();
+	int i, e;
+	DataManager::GetValue(TW_XPOSED, i);
+	DataManager::GetValue(TW_XPOSED_ENABLED, e);
+	LOGINFO("Xposed: installed=%d, enabled=%d.\n", i, e);
 
 	// Launch the main GUI
 	gui_start();
