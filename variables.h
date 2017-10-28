@@ -140,6 +140,13 @@
 #define TW_USE_SHA2                 "tw_use_sha2"
 #define TW_NO_SHA2                  "tw_no_sha2"
 
+// Xposed
+#define TW_XPOSED                 "tw_xposed"
+#define TW_XPOSED_ENABLED         "tw_xposed_enabled"
+#define XPOSED_DATA_DIR           "/data/user_de/0/de.robv.android.xposed.installer"
+#define XPOSED_CONF_DIR           "/data/user_de/0/de.robv.android.xposed.installer/conf"
+#define XPOSED_DISABLE_FILE       "/data/user_de/0/de.robv.android.xposed.installer/conf/disabled"
+
 // Also used:
 //   tw_boot_is_mountable
 //   tw_system_is_mountable
