@@ -211,7 +211,7 @@ int TWFunc::Set_Xposed_Enabled(bool enable) {
 	        if (!TWFunc::Path_Exists(XPOSED_CONF_DIR))
 	                mkdir(XPOSED_CONF_DIR, 0771);
 	        string empty = "";
-	        value = TWFunc::write_file(XPOSED_DISABLE_FILE, empty);
+	        value = TWFunc::write_to_file(XPOSED_DISABLE_FILE, empty);
 	}
 	TWFunc::Set_Xposed_Vars();
 	return value;
@@ -1088,7 +1088,7 @@ int TWFunc::Set_Btn_Brightness(std::string btn_brightness_value)
 	int result = -1;
 	std::string btn_brightness_file = "/sys/class/leds/button-backlight/brightness";
 	LOGINFO("TWFunc::Set_Btn_Brightness: Setting buttons brightness control to %s\n", btn_brightness_value.c_str());
-	result = TWFunc::write_file(btn_brightness_file, btn_brightness_value);
+	result = TWFunc::write_to_file(btn_brightness_file, btn_brightness_value);
 	return result;
 }
 
