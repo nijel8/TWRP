@@ -1138,6 +1138,13 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 void TWFunc::Disable_Stock_Recovery_Replace(void) {
+    if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
+        // Respect tw_mount_system_ro setting set by user
+        // If "verify" flag is set in fstab, /system shouldn't be changed in anyway
+        gui_msg("Renaming stock recovery file not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
+        return;
+    }
+
 	if (PartitionManager.Mount_By_Path("/system", false)) {
 		// Disable flashing of stock recovery
 		if (TWFunc::Path_Exists("/system/recovery-from-boot.p")) {
