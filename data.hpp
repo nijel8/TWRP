@@ -39,7 +39,7 @@ public:
 	static int GetValue(const string& varName, string& value);
 	static int GetValue(const string& varName, int& value);
 	static int GetValue(const string& varName, float& value);
-	static unsigned long long GetValue(const string& varName, unsigned long long& value);
+	static int GetValue(const string& varName, unsigned long long& value);
 
 	// Helper functions
 	static string GetStrValue(const string& varName);

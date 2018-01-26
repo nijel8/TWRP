@@ -1,5 +1,5 @@
 /*
-	Copyright 2017 bigbiff/Dees_Troy TeamWin
+	Copyright 2018 bigbiff/Dees_Troy TeamWin
 	This file is part of TWRP/TeamWin Recovery Project.
 
 	TWRP is free software: you can redistribute it and/or modify
@@ -16,10 +16,12 @@
 	along with TWRP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// The keystore refuses to allow the root user to supply auth tokens, so we write the auth token to a file in TWRP and
-// run a separate service (this) that runs user the system user to add the auth token. TWRP waits for /auth_token to be
-// deleted and also looks for /auth_error to check for errors. TWRP will error out after a while if /auth_token
-// does not get deleted.
+/* The keystore refuses to allow the root user to supply auth tokens, so
+ * we write the auth token to a file in TWRP and run a separate service
+ * (this) that runs as the system user to add the auth token. TWRP waits
+ * for /auth_token to be deleted and also looks for /auth_error to check
+ * for errors. TWRP will error out after a while if /auth_token does not
+ * get deleted. */
 
 #include <stdio.h>
 #include <string>

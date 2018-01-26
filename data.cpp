@@ -232,7 +232,7 @@ int DataManager::ResetDefaults()
 
 int DataManager::LoadValues(const string& filename)
 {
-	string str, dev_id;
+	string dev_id;
 
 	if (!mInitialized)
 		SetDefaultValues();
@@ -267,7 +267,14 @@ int DataManager::LoadValues(const string& filename)
 
 int DataManager::LoadPersistValues(void)
 {
-	string str, dev_id;
+	static bool loaded = false;
+	string dev_id;
+
+	// Only run this function once, and make sure normal settings file has not yet been read
+	if (loaded || !mBackingFile.empty() || !TWFunc::Path_Exists(PERSIST_SETTINGS_FILE))
+		return -1;
+
+	LOGINFO("Attempt to load settings from /persist settings file...\n");
 
 	if (!mInitialized)
 		SetDefaultValues();
@@ -284,9 +291,14 @@ int DataManager::LoadPersistValues(void)
 	blankTimer.setTime(mPersist.GetIntValue("tw_screen_timeout_secs"));
 #endif
 
+	update_tz_environment_variables();
+	TWFunc::Set_Brightness(GetStrValue("tw_brightness"));
+
 	pthread_mutex_unlock(&m_valuesLock);
 
 	/* Don't set storage nor backup paths this early */
+
+	loaded = true;
 
 	return 0;
 }
@@ -390,7 +402,7 @@ int DataManager::GetValue(const string& varName, float& value)
 	return 0;
 }
 
-unsigned long long DataManager::GetValue(const string& varName, unsigned long long& value)
+int DataManager::GetValue(const string& varName, unsigned long long& value)
 {
 	string data;
 
@@ -896,6 +908,8 @@ void DataManager::SetDefaultValues()
 	property_get("ro.product.device", code_name, "hydrolium");
 	DataManager::SetValue("tw_version_unofficial", "for " + string(code_name) + " by nijel8@XDA");
 
+    mData.SetValue("tw_enable_adb_backup", "0");
+	
 	pthread_mutex_unlock(&m_valuesLock);
 }
 

@@ -912,7 +912,7 @@ void TWFunc::Auto_Generate_Backup_Name() {
 	}
 }
 
-void TWFunc::Fixup_Time_On_Boot(const string& time_paths)
+void TWFunc::Fixup_Time_On_Boot(const string& time_paths /* = "" */)
 {
 #ifdef QCOM_RTC_FIX
 	static bool fixed = false;
@@ -991,34 +991,38 @@ void TWFunc::Fixup_Time_On_Boot(const string& time_paths)
 				continue;
 
 			if (ats_path.empty() || strcmp(dt->d_name, "ats_2") == 0)
-				ats_path = paths[i].append(dt->d_name);
+				ats_path = paths[i] + dt->d_name;
 		}
 
 		closedir(d);
 	}
 
-	if (ats_path.empty())
-	{
+	if (ats_path.empty()) {
 		LOGINFO("TWFunc::Fixup_Time: no ats files found, leaving untouched!\n");
-		return;
-	}
-
-	f = fopen(ats_path.c_str(), "r");
-	if (!f)
-	{
+	} else if ((f = fopen(ats_path.c_str(), "r")) == NULL) {
 		LOGINFO("TWFunc::Fixup_Time: failed to open file %s\n", ats_path.c_str());
-		return;
-	}
-
-	if (fread(&offset, sizeof(offset), 1, f) != 1)
-	{
+	} else if (fread(&offset, sizeof(offset), 1, f) != 1) {
 		LOGINFO("TWFunc::Fixup_Time: failed load uint64 from file %s\n", ats_path.c_str());
 		fclose(f);
-		return;
-	}
-	fclose(f);
+	} else {
+		fclose(f);
 
-	LOGINFO("TWFunc::Fixup_Time: Setting time offset from file %s, offset %llu\n", ats_path.c_str(), offset);
+		LOGINFO("TWFunc::Fixup_Time: Setting time offset from file %s, offset %llu\n", ats_path.c_str(), (unsigned long long) offset);
+		DataManager::SetValue("tw_qcom_ats_offset", (unsigned long long) offset, 1);
+		fixed = true;
+	}
+
+	if (!fixed) {
+		// Failed to get offset from ats file, check twrp settings
+		unsigned long long value;
+		if (DataManager::GetValue("tw_qcom_ats_offset", value) < 0) {
+			return;
+		} else {
+			offset = (uint64_t) value;
+			LOGINFO("TWFunc::Fixup_Time: Setting time offset from twrp setting file, offset %llu\n", (unsigned long long) offset);
+			// Do not consider the settings file as a definitive answer, keep fixed=false so next run will try ats files again
+		}
+	}
 
 	gettimeofday(&tv, NULL);
 
@@ -1034,8 +1038,6 @@ void TWFunc::Fixup_Time_On_Boot(const string& time_paths)
 	settimeofday(&tv, NULL);
 
 	LOGINFO("TWFunc::Fixup_Time: Date and time corrected: %s\n", TWFunc::Get_Current_Date().c_str());
-	fixed = true;
-
 #endif
 }
 
