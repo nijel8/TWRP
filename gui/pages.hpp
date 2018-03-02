@@ -165,6 +165,7 @@ public:
 	static int RunReload();
 	static void RequestReload();
 	static void SetStartPage(const std::string& page_name);
+    static void ReloadNavbar();
 
 	// Used for actions and pages
 	static int ChangePage(std::string name);
@@ -205,6 +206,7 @@ protected:
 	static MouseCursor *mMouseCursor;
 	static HardwareKeyboard *mHardwareKeyboard;
 	static bool mReloadTheme;
+    static bool mReloadNavbar;
 	static std::string mStartPage;
 	static LoadingContext* currentLoadingContext;
 };

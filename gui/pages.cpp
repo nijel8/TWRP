@@ -70,6 +70,7 @@ HardwareKeyboard *PageManager::mHardwareKeyboard = NULL;
 bool PageManager::mReloadTheme = false;
 std::string PageManager::mStartPage = "main";
 std::vector<language_struct> Language_List;
+bool PageManager::mReloadNavbar = false;
 
 int tw_x_offset = 0;
 int tw_y_offset = 0;
@@ -1582,11 +1583,21 @@ int PageManager::RunReload() {
 	// This makes the console re-translate
 	GUIConsole::Clear_For_Retranslation();
 
+    if (mReloadNavbar) {
+        mReloadNavbar = false;
+        PageManager::ChangePage("settings");
+    }
+
 	return ret_val;
 }
 
 void PageManager::RequestReload() {
 	mReloadTheme = true;
+}
+
+void PageManager::ReloadNavbar() {
+    mReloadNavbar = true;
+    mReloadTheme = true;
 }
 
 void PageManager::SetStartPage(const std::string& page_name) {
