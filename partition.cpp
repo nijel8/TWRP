@@ -595,6 +595,20 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 		}
 	}
 
+    if (Mount_Point == "/system" && Can_Be_Mounted) {
+        bool mounted = Is_Mounted();
+        if (mounted || Mount(false)) {
+            string oreo;
+            TWFunc::Exec_Cmd("[ -L /system/vendor ]; echo $?", oreo);
+            DataManager::SetValue("tw_vendor_oreo", oreo);
+            if (DataManager::GetIntValue("tw_vendor_oreo") == 0) {
+                LOGINFO("Oreo /vendor detected...");
+            }
+            if (!mounted)
+                UnMount(false);
+        }
+    }
+
 	return true;
 }
 
