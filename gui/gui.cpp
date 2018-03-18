@@ -204,7 +204,7 @@ bool InputHandler::processInput(int timeout_ms)
 		break;
 
 	case EV_KEY:
-		if((ev.code == KEY_MENU || ev.code == KEY_HOME || ev.code == KEY_BACK) && DataManager::GetIntValue("tw_enable_keys") != 0) {
+		if((ev.code == KEY_MENU || ev.code == KEY_HOME || ev.code == KEY_BACK || ev.code == 254) && DataManager::GetIntValue("tw_enable_keys") != 0) {
 		    if(ev.value != 0){
 		         if(ev.code == KEY_HOME && DataManager::GetStrValue("tw_menu_key") != "")
 	                       PageManager::NotifyKey(KEY_HOMEPAGE, true);
@@ -214,7 +214,11 @@ bool InputHandler::processInput(int timeout_ms)
 		    }else{
 	                 switch (ev.code)
 	                 {
-	                  case KEY_MENU:
+	                  case 254:
+                          if(DataManager::GetIntValue("tw_busy") == 0 && TWFunc::System_Property_Get("ro.product.device") == "gtelwifiue")
+                                         gui_changeOverlay(DataManager::GetStrValue("tw_menu_key"));
+                          break;
+                      case KEY_MENU:
 	                  	  if(DataManager::GetIntValue("tw_busy") == 0)
 	                               	     gui_changeOverlay(DataManager::GetStrValue("tw_menu_key"));
 		                  break;
