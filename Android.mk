@@ -373,7 +373,9 @@ endif
 ifeq ($(TW_EXCLUDE_TWRPAPP),true)
     LOCAL_CFLAGS += -DTW_EXCLUDE_TWRPAPP
 endif
-
+ifneq ($(TW_CLOCK_OFFSET),)
+	LOCAL_CFLAGS += -DTW_CLOCK_OFFSET=$(TW_CLOCK_OFFSET)
+endif
 LOCAL_ADDITIONAL_DEPENDENCIES += \
     dump_image \
     erase_image \
