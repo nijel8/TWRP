@@ -1130,17 +1130,23 @@ void TWFunc::Disable_Stock_Recovery_Replace(void) {
     if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
         // Respect tw_mount_system_ro setting set by user
         // If "verify" flag is set in fstab, /system shouldn't be changed in anyway
-        gui_msg("Renaming stock recovery file not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
+        gui_msg("Renaming stock recovery file/flash script not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
         return;
     }
 
 	if (PartitionManager.Mount_By_Path("/system", false)) {
 		// Disable flashing of stock recovery
 		if (TWFunc::Path_Exists("/system/recovery-from-boot.p")) {
-			rename("/system/recovery-from-boot.p", "/system/recovery-from-boot.bak");
+			rename("/system/recovery-from-boot.p", "/system/recovery-from-boot.p.bak");
 			gui_msg("rename_stock=Renamed stock recovery file in /system to prevent the stock ROM from replacing TWRP.");
 			sync();
 		}
+		PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
+		} else if (TWFunc::Path_Exists("/system/bin/install-recovery.sh")) {
+            rename("/system/bin/install-recovery.sh", "/system/bin/install-recovery.sh.bak");
+            gui_msg("rename_stock=Renamed stock recovery flash script in /system/bin to prevent the stock ROM from replacing TWRP.");
+            sync();
+        }
 		PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
 	}
 }
