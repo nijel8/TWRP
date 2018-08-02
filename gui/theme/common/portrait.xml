@@ -2933,7 +2933,7 @@
 
 			<button style="main_button_half_height">
 				<placement x="%indent%" y="%row16_y%"/>
-				<text>{@su_cancel=Do not Install}</text>
+				<text>{@install_cancel=Do not Install}</text>
 				<action function="reboot">%tw_reboot_param%</action>
 			</button>
 
