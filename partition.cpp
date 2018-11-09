@@ -602,7 +602,7 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
             TWFunc::Exec_Cmd("[ -L /system/vendor ]; echo $?", oreo);
             DataManager::SetValue("tw_vendor_oreo", oreo);
             if (DataManager::GetIntValue("tw_vendor_oreo") == 0) {
-                LOGINFO("Oreo /vendor detected...");
+                LOGINFO("Oreo /vendor detected...\n");
             }
             if (!mounted)
                 UnMount(false);
