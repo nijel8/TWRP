@@ -831,7 +831,6 @@ void DataManager::SetDefaultValues()
 		mPersist.SetValue("tw_btn_brightness_pct", "100");
 		mPersist.SetValue("tw_disable_navbar", "0");
 		mPersist.SetValue("tw_enable_keys", "0");
-		mPersist.SetValue("tw_samsung_navbar", "0");
 		mPersist.SetValue("tw_tab_icons", "0");
 #ifdef TW_SECONDARY_BRIGHTNESS_PATH
 		string secondfindbright = EXPAND(TW_SECONDARY_BRIGHTNESS_PATH);
@@ -911,6 +910,13 @@ void DataManager::SetDefaultValues()
     char code_name[PROPERTY_VALUE_MAX];
 	property_get("ro.product.device", code_name, "hydrolium");
 	DataManager::SetValue("tw_version_unofficial", "for " + string(code_name) + " by nijel8@XDA");
+
+    if (strcmp(code_name, "nitrogen") == 0) {
+        mPersist.SetValue("tw_hardware_keys", "0");
+        mPersist.SetValue("tw_samsung_navbar", "1");
+    } else {
+        mPersist.SetValue("tw_samsung_navbar", "0");
+    }
 
     mData.SetValue("tw_enable_adb_backup", "0");
 	
