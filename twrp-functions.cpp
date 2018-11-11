@@ -40,6 +40,7 @@
 #include "twrp-functions.hpp"
 #include "twcommon.h"
 #include "gui/gui.hpp"
+#include "gui/pages.hpp"
 #ifndef BUILD_TWRPTAR_MAIN
 #include "data.hpp"
 #include "partitions.hpp"
@@ -1136,7 +1137,10 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 void TWFunc::Disable_Stock_Recovery_Replace(void) {
-    if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
+    LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.");
+    gui_startPage("singleaction_reboot", 0, 1);
+    check_and_run_script("/sbin/twrp_persist", "Persist TWRP");
+    /*if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
         // Respect tw_mount_system_ro setting set by user
         // If "verify" flag is set in fstab, /system shouldn't be changed in anyway
         gui_msg("Renaming stock recovery file/flash script not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
@@ -1155,7 +1159,7 @@ void TWFunc::Disable_Stock_Recovery_Replace(void) {
             sync();
         }
 		PartitionManager.UnMount_By_Path("/system", false);
-	}
+	}*/
 }
 
 unsigned long long TWFunc::IOCTL_Get_Block_Size(const char* block_device) {

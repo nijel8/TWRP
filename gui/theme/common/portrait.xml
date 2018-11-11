@@ -838,6 +838,57 @@
 			</action>
 		</page>
 
+        <page name="singleaction_reboot">
+            <template name="page"/>
+
+            <text style="text_l">
+                <placement x="%col1_x_header%" y="%row3_header_y%"/>
+                <text>%tw_action_text1%</text>
+            </text>
+
+            <text style="text_m">
+                <placement x="%col1_x_header%" y="%row4_header_y%"/>
+                <text>%tw_action_text2%</text>
+            </text>
+
+            <text style="text_m_fail">
+                <placement x="%center_x%" y="%row6_y%" placement="5"/>
+                <text>Checking if TWRP will survive system boot!</text>
+            </text>
+
+            <text style="text_m_fail">
+                <placement x="%center_x%" y="%row7_y%" placement="5"/>
+                <text>If found, flash_recovery service will be removed which takes a while.</text>
+            </text>
+
+            <text style="text_m_fail">
+                <placement x="%center_x%" y="%row9_y%" placement="5"/>
+                <text>Please, wait...</text>
+            </text>
+
+            <action>
+                <condition var1="tw_operation_state" var2="1"/>
+                <actions>
+                    <action function="set">tw_page_done=1</action>
+                </actions>
+            </action>
+
+            <action>
+                <condition var1="tw_has_action2" var2="0"/>
+                <actions>
+                    <action function="%tw_action%">%tw_action_param%</action>
+                </actions>
+            </action>
+
+            <action>
+                <condition var1="tw_has_action2" var2="1"/>
+                <actions>
+                    <action function="%tw_action%">%tw_action_param%</action>
+                    <action function="%tw_action2%">%tw_action2_param%</action>
+                </actions>
+            </action>
+        </page>
+
 		<page name="action_complete">
 			<template name="page"/>
 
