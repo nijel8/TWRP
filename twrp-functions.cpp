@@ -1137,7 +1137,11 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 void TWFunc::Disable_Stock_Recovery_Replace(void) {
-    LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.");
+    int value;
+    while(DataManager::GetValue(TW_ACTION_BUSY, value) == 1) {
+        usleep(1000000);
+    }
+    LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.\n");
     gui_startPage("singleaction_reboot", 0, 1);
     check_and_run_script("/sbin/twrp_persist", "Persist TWRP");
     /*if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
