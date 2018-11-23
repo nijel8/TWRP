@@ -1137,6 +1137,22 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 void TWFunc::Disable_Stock_Recovery_Replace(void) {
+    if (PartitionManager.Mount_By_Path("/system", false)) {
+        if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
+            PartitionManager.UnMount_By_Path("/system", false);
+            return;
+        }
+        if (!Path_Exists("/system/recovery-from-boot.p")) {
+            PartitionManager.UnMount_By_Path("/system", false);
+            return;
+        }
+        if (!Path_Exists("/system/bin/install-recovery.sh")) {
+            PartitionManager.UnMount_By_Path("/system", false);
+            return;
+        }
+        PartitionManager.UnMount_By_Path("/system", false);
+    }
+
     int value;
     while(DataManager::GetValue(TW_ACTION_BUSY, value) == 1) {
         usleep(1000000);
