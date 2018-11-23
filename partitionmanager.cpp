@@ -188,11 +188,6 @@ int TWPartitionManager::Process_Fstab(string Fstab_Filename, bool Display_Error)
 		if (fstab_line[line_size - 1] != '\n')
 			fstab_line[line_size] = '\n';
 
-		string str(fstab_line);
-        if (str.find("/vendor") != string::npos && DataManager::GetIntValue("tw_vendor_oreo") != 0) {
-            continue;
-        }
-
 		TWPartition* partition = new TWPartition();
 		if (partition->Process_Fstab_Line(fstab_line, Display_Error, &twrp_flags))
 			Partitions.push_back(partition);
@@ -208,12 +203,6 @@ int TWPartitionManager::Process_Fstab(string Fstab_Filename, bool Display_Error)
 		// Add any items from twrp.flags that did not exist in the recovery.fstab
 		for (std::map<string, Flags_Map>::iterator mapit=twrp_flags.begin(); mapit!=twrp_flags.end(); mapit++) {
 			if (Find_Partition_By_Path(mapit->first) == NULL) {
-
-                string str_next(mapit->second.fstab_line);
-                if (str_next.find("/vendor") != string::npos && DataManager::GetIntValue("tw_vendor_oreo") != 0) {
-                    continue;
-                }
-
 				TWPartition* partition = new TWPartition();
 				if (partition->Process_Fstab_Line(mapit->second.fstab_line, Display_Error, NULL))
 					Partitions.push_back(partition);
