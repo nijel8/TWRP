@@ -1166,6 +1166,16 @@ void TWFunc::Disable_Stock_Recovery_Replace(void) {
 	}*/
 }
 
+void TWFunc::Crypto_Footer(char *do_what) {
+    if (strncmp(do_what, "backup", strlen("backup")) == 0) {
+        Exec_Cmd("dump_footer backup");
+    } else if (strncmp(do_what, "restore", strlen("restore")) == 0) {
+        Exec_Cmd("dump_footer restore");
+    } else {
+        LOGERR("TWFunc::Crypto_Footer('backup'|'restore') expected\n");
+    }
+}
+
 unsigned long long TWFunc::IOCTL_Get_Block_Size(const char* block_device) {
 	unsigned long block_device_size;
 	int ret = 0;

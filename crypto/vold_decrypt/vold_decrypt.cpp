@@ -1015,6 +1015,8 @@ int Vold_Decrypt_Core(const string& Password) {
 		return VD_ERR_PASSWORD_EMPTY;
 	}
 
+    TWFunc::Crypto_Footer("backup");
+
 	// Mount system and check for vold and vdc
 	if (!PartitionManager.Mount_By_Path("/system", true)) {
 		return VD_ERR_UNABLE_TO_MOUNT_SYSTEM;
@@ -1025,6 +1027,14 @@ int Vold_Decrypt_Core(const string& Password) {
 		LOGINFO("ERROR: /system/bin/vdc not found, aborting.\n");
 		return VD_ERR_MISSING_VDC;
 	}
+
+    if (!PartitionManager.Mount_By_Path("/vendor", true)) {
+        return -11;
+    }
+
+    if (!PartitionManager.Mount_By_Path("/firmware", true)) {
+        return -12;
+    }
 
 	fp_kmsg = fopen("/dev/kmsg", "a");
 
@@ -1117,6 +1127,18 @@ int Vold_Decrypt_Core(const string& Password) {
 		LOGINFO("WARNING: system could not be unmounted normally!\n");
 		umount2("/system", MNT_DETACH);
 	}
+
+    if (!PartitionManager.UnMount_By_Path("/vendor", true)) {
+        LOGINFO("WARNING: vendor could not be unmounted normally!\n");
+        umount2("/vendor", MNT_DETACH);
+    }
+
+    if (!PartitionManager.UnMount_By_Path("/firmware", true)) {
+        LOGINFO("WARNING: firmware could not be unmounted normally!\n");
+        umount2("/firmware", MNT_DETACH);
+    }
+
+    TWFunc::Crypto_Footer("restore");
 
 	LOGINFO("Finished.\n");
 
