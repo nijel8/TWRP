@@ -851,19 +851,14 @@
                 <text>%tw_action_text2%</text>
             </text>
 
-            <text style="text_m_fail">
-                <placement x="%center_x%" y="%row6_y%" placement="5"/>
-                <text>Checking if TWRP will survive system boot!</text>
-            </text>
-
-            <text style="text_m_fail">
+            <text style="text_m_accent">
                 <placement x="%center_x%" y="%row7_y%" placement="5"/>
-                <text>If found, flash_recovery service will be removed which takes a while.</text>
+                <text>{@survive_line1=Checking if TWRP will survive system boot!}</text>
             </text>
 
-            <text style="text_m_fail">
+            <text style="text_m_accent">
                 <placement x="%center_x%" y="%row9_y%" placement="5"/>
-                <text>Please, wait...</text>
+                <text>{@survive_line2=Please, wait...}</text>
             </text>
 
             <action>

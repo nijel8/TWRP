@@ -42,6 +42,10 @@
 		<string name="xposed_en">Enabling Xposed...</string>
 		<string name="xposed_en_complete">Xposed Enabled</string>
 
+        <!-- Survive system boot strings -->
+        <string name="survive_line1">Checking if TWRP will survive system boot!</string>
+        <string name="survive_line2">Please, wait...</string>
+
 		<string name="system">Sistem</string>
 		<string name="system_image">Sistemski odtis</string>
 		<string name="vendor">Prodajalec</string>
