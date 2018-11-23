@@ -44,6 +44,10 @@
 		<string name="xposed_en">Enabling Xposed...</string>
 		<string name="xposed_en_complete">Xposed Enabled</string>
 
+        <!-- Survive system boot strings -->
+        <string name="survive_line1">Checking if TWRP will survive system boot!</string>
+        <string name="survive_line2">Please, wait...</string>
+
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System Image</string>
