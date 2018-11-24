@@ -1598,6 +1598,7 @@ void TWPartitionManager::Post_Decrypt(const string& Block_Device) {
 }
 
 int TWPartitionManager::Decrypt_Device(string Password) {
+	TWFunc::Crypto_Footer("backup"); // backup crypto footer or system may ask for decrypt password on next boot
 #ifdef TW_INCLUDE_CRYPTO
 	char crypto_state[PROPERTY_VALUE_MAX], crypto_blkdev[PROPERTY_VALUE_MAX];
 	std::vector<TWPartition*>::iterator iter;
@@ -1619,8 +1620,10 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 
 	if (DataManager::GetIntValue(TW_IS_FBE)) {
 #ifdef TW_INCLUDE_FBE
-		if (!Mount_By_Path("/data", true)) // /data has to be mounted for FBE
+		if (!Mount_By_Path("/data", true)) { // /data has to be mounted for FBE
+			TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 			return -1;
+		}
 		int retry_count = 10;
 		while (!TWFunc::Path_Exists("/data/system/users/gatekeeper.password.key") && --retry_count)
 			usleep(2000); // A small sleep is needed after mounting /data to ensure reliable decrypt... maybe because of DE?
@@ -1628,11 +1631,13 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 		LOGINFO("Decrypting FBE for user %i\n", user_id);
 		if (Decrypt_User(user_id, Password)) {
 			Post_Decrypt("");
+			TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 			return 0;
 		}
 #else
 		LOGERR("FBE support is not present\n");
 #endif
+		TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 		return -1;
 	}
 
@@ -1640,6 +1645,7 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 	pid_t pid = fork();
 	if (pid < 0) {
 		LOGERR("fork failed\n");
+		TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 		return -1;
 	} else if (pid == 0) {
 		// Child process
@@ -1682,6 +1688,7 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 
 	if (pwret != 0) {
 		gui_err("fail_decrypt=Failed to decrypt data.");
+		TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 		return -1;
 	}
 
@@ -1691,11 +1698,14 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 	} else {
 		Post_Decrypt(crypto_blkdev);
 	}
+	TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 	return 0;
 #else
 	gui_err("no_crypto_support=No crypto support was compiled into this build.");
+	TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 	return -1;
 #endif
+	TWFunc::Crypto_Footer("restore"); // restore original crypto footer to keep system happy
 	return 1;
 }
 

@@ -1015,8 +1015,6 @@ int Vold_Decrypt_Core(const string& Password) {
 		return VD_ERR_PASSWORD_EMPTY;
 	}
 
-    TWFunc::Crypto_Footer("backup");
-
 	// Mount system and check for vold and vdc
 	if (!PartitionManager.Mount_By_Path("/system", true)) {
 		return VD_ERR_UNABLE_TO_MOUNT_SYSTEM;
@@ -1137,8 +1135,6 @@ int Vold_Decrypt_Core(const string& Password) {
         LOGINFO("WARNING: firmware could not be unmounted normally!\n");
         umount2("/firmware", MNT_DETACH);
     }
-
-    TWFunc::Crypto_Footer("restore");
 
 	LOGINFO("Finished.\n");
 
