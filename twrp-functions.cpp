@@ -201,18 +201,18 @@ void TWFunc::Set_Xposed_Vars() {
 }
 
 int TWFunc::Set_Xposed_Enabled(bool enable) {
-        int value;
-        DataManager::GetValue(TW_XPOSED, value);
-        if (value != 1)
-                return 101;
+		int value;
+		DataManager::GetValue(TW_XPOSED, value);
+		if (value != 1)
+				return 101;
 
 	if (enable) {
-	        value = remove (XPOSED_DISABLE_FILE);
+			value = remove (XPOSED_DISABLE_FILE);
 	} else {
-	        if (!TWFunc::Path_Exists(XPOSED_CONF_DIR))
-	                mkdir(XPOSED_CONF_DIR, 0771);
-	        string empty = "";
-	        value = TWFunc::write_to_file(XPOSED_DISABLE_FILE, empty);
+			if (!TWFunc::Path_Exists(XPOSED_CONF_DIR))
+					mkdir(XPOSED_CONF_DIR, 0771);
+			string empty = "";
+			value = TWFunc::write_to_file(XPOSED_DISABLE_FILE, empty);
 	}
 	TWFunc::Set_Xposed_Vars();
 	return value;
@@ -1136,36 +1136,44 @@ std::string TWFunc::to_string(unsigned long value) {
 	return os.str();
 }
 
-void TWFunc::Disable_Stock_Recovery_Replace(void) {
-    if (PartitionManager.Mount_By_Path("/system", false)) {
-        if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
-            PartitionManager.UnMount_By_Path("/system", false);
-            return;
-        }
-        if (!Path_Exists("/system/recovery-from-boot.p")) {
-            PartitionManager.UnMount_By_Path("/system", false);
-            return;
-        }
-        if (!Path_Exists("/system/bin/install-recovery.sh")) {
-            PartitionManager.UnMount_By_Path("/system", false);
-            return;
-        }
-        PartitionManager.UnMount_By_Path("/system", false);
-    }
+int TWFunc::Disable_Stock_Recovery_Replace(bool page) {
+	if (PartitionManager.Mount_By_Path("/system", false)) {
+		if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
+			PartitionManager.UnMount_By_Path("/system", false);
+			return 0;
+		}
+		if (!Path_Exists("/system/recovery-from-boot.p")) {
+			PartitionManager.UnMount_By_Path("/system", false);
+			return 0;
+		}
+		if (!Path_Exists("/system/bin/install-recovery.sh")) {
+			PartitionManager.UnMount_By_Path("/system", false);
+			return 0;
+		}
+		PartitionManager.UnMount_By_Path("/system", false);
+	}
 
-    int value;
-    while(DataManager::GetValue(TW_ACTION_BUSY, value) == 1) {
-        usleep(1000000);
-    }
-    LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.\n");
-    gui_startPage("singleaction_reboot", 0, 1);
-    check_and_run_script("/sbin/twrp_persist", "Persist TWRP");
-    /*if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
-        // Respect tw_mount_system_ro setting set by user
-        // If "verify" flag is set in fstab, /system shouldn't be changed in anyway
-        gui_msg("Renaming stock recovery file/flash script not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
-        return;
-    }
+	LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.\n");
+
+	if (page) {
+		int nav;
+		DataManager::GetValue("tw_disable_navbar", nav);
+		DataManager::SetValue("tw_disable_navbar", 1); // show in full screen
+		gui_startPage("survive_reboot", 0, 1);
+		DataManager::SetValue("tw_disable_navbar", nav);
+	}
+	int ex;
+	ex = Exec_Cmd("/sbin/twrp_persist");
+	usleep(500000); // just in case
+	sync();
+	return ex;
+
+	/*if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
+		// Respect tw_mount_system_ro setting set by user
+		// If "verify" flag is set in fstab, /system shouldn't be changed in anyway
+		gui_msg("Renaming stock recovery file/flash script not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
+		return;
+	}
 
 	if (PartitionManager.Mount_By_Path("/system", false)) {
 		// Disable flashing of stock recovery
@@ -1174,22 +1182,22 @@ void TWFunc::Disable_Stock_Recovery_Replace(void) {
 			gui_msg("rename_stock=Renamed stock recovery file in /system to prevent the stock ROM from replacing TWRP.");
 			sync();
 		} else if (TWFunc::Path_Exists("/system/bin/install-recovery.sh")) {
-            rename("/system/bin/install-recovery.sh", "/system/bin/install-recovery.sh.bak");
-            gui_msg("rename_stock=Renamed stock recovery flash script in /system/bin to prevent the stock ROM from replacing TWRP.");
-            sync();
-        }
+			rename("/system/bin/install-recovery.sh", "/system/bin/install-recovery.sh.bak");
+			gui_msg("rename_stock=Renamed stock recovery flash script in /system/bin to prevent the stock ROM from replacing TWRP.");
+			sync();
+		}
 		PartitionManager.UnMount_By_Path("/system", false);
 	}*/
 }
 
 void TWFunc::Crypto_Footer(char *do_what) {
-    if (strncmp(do_what, "backup", strlen("backup")) == 0) {
-        Exec_Cmd("dump_footer backup");
-    } else if (strncmp(do_what, "restore", strlen("restore")) == 0) {
-        Exec_Cmd("dump_footer restore");
-    } else {
-        LOGERR("TWFunc::Crypto_Footer('backup'|'restore') expected\n");
-    }
+	if (strncmp(do_what, "backup", strlen("backup")) == 0) {
+		Exec_Cmd("dump_footer backup");
+	} else if (strncmp(do_what, "restore", strlen("restore")) == 0) {
+		Exec_Cmd("dump_footer restore");
+	} else {
+		LOGERR("TWFunc::Crypto_Footer('backup'|'restore') expected\n");
+	}
 }
 
 unsigned long long TWFunc::IOCTL_Get_Block_Size(const char* block_device) {

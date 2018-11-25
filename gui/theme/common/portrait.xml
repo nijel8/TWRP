@@ -838,7 +838,7 @@
 			</action>
 		</page>
 
-        <page name="singleaction_reboot">
+        <page name="survive_reboot">
             <template name="page"/>
 
             <text style="text_l">
