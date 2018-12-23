@@ -22,6 +22,7 @@ extern "C" {
 #include "../twcommon.h"
 }
 #include "../minuitwrp/minui.h"
+#include "../twrp-functions.hpp"
 
 #include "rapidxml.hpp"
 #include "objects.hpp"
@@ -77,7 +78,6 @@ GUIListBox::GUIListBox(xml_node<>* node) : GUIScrollList(node)
 				data.action = NULL;
 				if (currentValue == (*iter).filename) {
 					data.selected = 1;
-					DataManager::SetValue("tw_language_display", (*iter).displayvalue);
 				} else
 					data.selected = 0;
 				mListItems.push_back(data);
@@ -193,7 +193,7 @@ int GUIListBox::NotifyVarChange(const std::string& varName, const std::string& v
 			SetVisibleListLocation(mVisibleItems.empty() ? 0 : mVisibleItems.size()-1);
 		}
 	}
-
+	DataManager::Flush();
 	return 0;
 }
 
@@ -248,8 +248,14 @@ void GUIListBox::NotifySelect(size_t item_selected)
 		item.selected = 1;
 		string str = item.variableValue;	// [check] should this set currentValue instead?
 		DataManager::SetValue(mVariable, str);
+		if (mVariable == "tw_language"){
+		     str = item.displayName;
+		     DataManager::SetValue("tw_language_display", str);
+		}
+		
 	}
 	if (item.action)
 		item.action->doActions();
 	mUpdate = 1;
+	DataManager::Flush();
 }
