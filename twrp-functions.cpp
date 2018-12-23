@@ -210,7 +210,7 @@ int TWFunc::Set_Xposed_Enabled(bool enable) {
 	        if (!TWFunc::Path_Exists(XPOSED_CONF_DIR))
 	                mkdir(XPOSED_CONF_DIR, 0771);
 	        string empty = "";
-	        value = TWFunc::write_file(XPOSED_DISABLE_FILE, empty);
+	        value = TWFunc::write_to_file(XPOSED_DISABLE_FILE, empty);
 	}
 	TWFunc::Set_Xposed_Vars();
 	return value;
