@@ -1,14 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
+
 <language>
 	<display>Русский</display>
-	<!-- Translated by Jemmini; modified by agur4ik, SevenMaxs, S-trace 2017 -->
+	<!-- Translated by Jemmini; modified by agur4ik, SevenMaxs, S-trace 2016 -->
 
 	<resources>
 		<!-- Font overrides - only change these if your language requires special characters -->
-		<resource filename="RobotoCondensed-Regular.ttf" name="font_l" scale="90" type="fontoverride"/>
-		<resource filename="RobotoCondensed-Regular.ttf" name="font_m" scale="90" type="fontoverride"/>
-		<resource filename="RobotoCondensed-Regular.ttf" name="font_s" scale="90" type="fontoverride"/>
-		<resource filename="DroidSansMono.ttf" name="fixed" scale="100" type="fontoverride"/>
+		<resource name="font_l" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
+		<resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
+		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
+		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Сброс блокировки экрана</string>
+		<string name="reset_lockscreen_hdr">Сброс блокировки экрана</string>
+		<string name="reset_lockscreen_note1">Если вы не можете разблокировать экран</string>
+		<string name="reset_lockscreen_note2">после восстановления, сделайте следующее.</string>
+		<string name="swipe_to_reset_lockscreen">Свайп для сброса</string>
+		<string name="resetting_lockscreen">Сброс блокировки экрана...</string>
+		<string name="reset_lockscreen_complete">Сброс блокировки экрана завершен</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Установить TWRP приложение?</string>
+		<string name="reboot_install_app1">Вы желаете установить официальное TWRP приложение?</string>
+		<string name="reboot_install_app2">Приложение может проверять новые версии TWRP.</string>
+		<string name="reboot_install_app_prompt_install">Предлагать установку TWRP приложения</string>
+		<string name="reboot_install_app_system">Установить как системное</string>
+		<string name="reboot_installing_app">Установка приложения...</string>
+		<string name="swipe_to_install_app">Свайп для установки</string>
+
+
+
+
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System Image</string>
@@ -29,10 +51,11 @@
 		<string name="sdext">SD-EXT</string>
 		<string name="adopted_data">Adopted Data</string>
 		<string name="adopted_storage">Adopted Storage</string>
+
 		<!-- GUI XML strings -->
 		<string name="twrp_header">Team Win Recovery Project</string>
 		<string name="twrp_watch_header">TWRP %tw_version%</string>
-		<string name="cpu_temp">ЦП: %tw_cpu_temp% °C</string>
+		<string name="cpu_temp">ЦП: %tw_cpu_temp% &#xB0;C</string>
 		<string name="battery_pct">Батарея: %tw_battery%</string>
 		<string name="sort_by_name">Сорт.по имени</string>
 		<string name="sort_by_date">Сорт.по дате</string>
@@ -47,6 +70,7 @@
 		<string name="tab_screen">ЭКРАН</string>
 		<string name="tab_vibration">ВИБРАЦИЯ</string>
 		<string name="tab_language">ЯЗЫК</string>
+
 		<string name="install_btn">Установка</string>
 		<string name="wipe_btn">Очистка</string>
 		<string name="backup_btn">Резервное коп-ние</string>
@@ -319,7 +343,7 @@
 		<string name="time_zone_hdr">Часовой пояс</string>
 		<string name="sel_tz_list">Выбор часового пояса:</string>
 		<!-- Translator note: if it does not make sense to translate the locations or if it makes more sense,
-			 feel free to change the location listed or drop the location entirely and just call it UTC -6 -->
+				feel free to change the location listed or drop the location entirely and just call it UTC -6 -->
 		<string name="utcm11">(UTC -11) о. Мидуэй, Самоа</string>
 		<string name="utcm10">(UTC -10) Гавайи</string>
 		<string name="utcm9">(UTC -9) Аляска</string>
@@ -354,13 +378,16 @@
 		<string name="curr_tz">Текущий часовой пояс: %tw_time_zone%</string>
 		<string name="curr_tz_s">Текущий часовой пояс:</string>
 		<string name="set_tz_btn">Установ.часовой пояс</string>
-		<string name="settings_screen_hdr">Экран</string>
+		<string name="settings_screen_hdr">Экран и кнопки</string>
 		<string name="settings_screen_timeout_hdr">Таймаут экрана</string>
 		<string name="enable_timeout_chk">Включить таймаут экрана</string>
 		<string name="screen_to_slider">Выключение экрана через n сек:</string>
 		<string name="screen_to_slider_s">Выключение экрана через n сек (0=выключен): %tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">Установка таймаута экрана недоступна</string>
-		<string name="screen_bright_slider">Яркость: %tw_brightness_pct%%</string>
+		<string name="screen_bright_slider">Яркость экрана: %tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">Яркость кнопок: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Отключить панель навигации</string>
+		<string name="enbl_keys_chk">Включение кнопки устройства</string>
 		<string name="screen_bright_na">Установка яркости недоступна</string>
 		<string name="vibration_hdr">Вибрация</string>
 		<string name="button_vibration_hdr">Вибрация при нажатии кнопок</string>
@@ -374,8 +401,8 @@
 		<string name="set_language_btn">Установить язык</string>
 		<string name="advanced_hdr">Дополнительно</string>
 		<string name="copy_log_confirm">Копировать лог на SD?</string>
-		<string name="copying_log" version="2">Копирование лога на SD...</string>
-		<string name="copy_log_complete" version="2">Копирование лога завершено.</string>
+		<string name="copying_log">Копирование лога на SD...</string>
+		<string name="copy_log_complete">Копирование лога завершено</string>
 		<string name="fix_context_btn">Исправить контекст</string>
 		<string name="part_sd_btn">Разметка SD-карты</string>
 		<string name="part_sd_s_btn">Разм-ка SD</string>
@@ -475,6 +502,7 @@
 		<string name="install_cancel">Не устанавливать</string>
 		<string name="sel_storage_list">Выберите накопитель</string>
 		<string name="ok_btn">OK</string>
+
 		<!-- Various console messages - these consist of user displayed messages, oftentimes errors -->
 		<string name="no_kernel_selinux">Чтение SELinux-контекста не поддерживается ядром.</string>
 		<string name="full_selinux">Присутствует полная поддержка SELinux.</string>
@@ -673,7 +701,7 @@
 		<string name="theme_ver_err">Версия темы не соответствует версии TWRP. Используется тема по умолчанию.</string>
 		<string name="up_a_level">(в родительский каталог)</string>
 		<string name="install_reboot" version="2">Устройство будет перезагружено через %tw_sleep% сек.</string>
-		<string name="adbbackup_error">Ошибка резервного копирования по ADB. Выход...</string>
+		<string name="adbbackup_error">Ошибка резервного копирования по ADB. Выход..."</string>
 		<string name="adbbackup_control_error">Невозможно записать в канал управления ADB.</string>
 		<string name="twrp_adbbu_option">-- эта опция позволяет делать резервное копирование по adb</string>
 		<string name="partition_not_found">путь: {1} отсутсвует в списке разделов.</string>

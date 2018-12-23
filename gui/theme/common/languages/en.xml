@@ -358,13 +358,36 @@
 		<string name="curr_tz">Current Time Zone: %tw_time_zone%</string>
 		<string name="curr_tz_s">Current Time Zone:</string>
 		<string name="set_tz_btn">Set Time Zone</string>
-		<string name="settings_screen_hdr">Screen</string>
 		<string name="settings_screen_timeout_hdr">Screen Timeout</string>
 		<string name="enable_timeout_chk">Enable screen timeout</string>
 		<string name="screen_to_slider">Screen timeout in seconds:</string>
 		<string name="screen_to_slider_s">Screen timeout in seconds (0=disabled): %tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">Screen timeout setting unavailable</string>
-		<string name="screen_bright_slider">Brightness: %tw_brightness_pct%%</string>
+		
+		
+		
+		
+		<string name="settings_screen_hdr">Screen and buttons</string>
+		<string name="screen_bright_slider">Screen brightness: %tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">Buttons brightness: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Disable navbar</string>
+		<string name="enbl_keys_chk">Enable device buttons</string>
+		
+		
+		
+		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
+		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
+		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
+		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
+		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
+		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
+		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+		
+		
+		
+		
+		
+		
 		<string name="screen_bright_na">Brightness setting unavailable</string>
 		<string name="vibration_hdr">Vibration</string>
 		<string name="button_vibration_hdr">Button Vibration</string>

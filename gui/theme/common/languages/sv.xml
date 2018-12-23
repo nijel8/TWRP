@@ -8,6 +8,26 @@
 		<resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
 		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
+		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
+		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
+		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
+		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
+		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
+		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Install TWRP App?</string>
+		<string name="reboot_install_app1">Would you like to install the Official TWRP App?</string>
+		<string name="reboot_install_app2">The app can check for new TWRP versions.</string>
+		<string name="reboot_install_app_prompt_install">Prompt to install TWRP app if not installed</string>
+		<string name="reboot_install_app_system">Install as a System App</string>
+		<string name="reboot_installing_app">Installing App...</string>
+		<string name="swipe_to_install_app">Swipe to Install TWRP App</string>
+
+
+
 
 		<string name="system">System</string>
 		<string name="vendor">Leverantör</string>
@@ -131,6 +151,11 @@
 		<string name="tz_offset_30">30</string>
 		<string name="tz_offset_45">45</string>
 		<string name="curr_tz_s">Aktuell tidszon:</string>
+		<string name="settings_screen_hdr">Skärm och knappar</string>
+		<string name="screen_bright_slider">Skärmens ljusstyrka: %tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">Knappar ljusstyrka: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">Inaktivera navbar</string>
+		<string name="enbl_keys_chk">Aktivera enhetsknappar</string>
 		<string name="set_tz_btn">Ställ in tidszon</string>
 		<string name="vibration_hdr">Vibration</string>
 		<string name="select_language">Välj språk:</string>

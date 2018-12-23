@@ -10,6 +10,28 @@
 		<resource name="font_s" type="fontoverride" filename="DroidSansFallback.ttf" scale="100" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansFallback.ttf" scale="100" />
 
+
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">螢幕鎖定重置</string>
+		<string name="reset_lockscreen_hdr">螢幕鎖定重置</string>
+		<string name="reset_lockscreen_note1">如果你無法通過螢幕解鎖認證</string>
+		<string name="reset_lockscreen_note2">你應該進行這個程序，在你還原你的備份之後</string>
+		<string name="swipe_to_reset_lockscreen">滑動以重置螢幕鎖定</string>
+		<string name="resetting_lockscreen">螢幕鎖定重置中...</string>
+		<string name="reset_lockscreen_complete">螢幕鎖定重置完成</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">安裝 TWRP 應用程式?</string>
+		<string name="reboot_install_app1">你要安裝官方的 TWRP 應用程式嗎?</string>
+		<string name="reboot_install_app2">此應用程式可以檢查新的 TWRP 版本</string>
+		<string name="reboot_install_app_prompt_install">如果未安裝TWRP應用程式，彈出詢問</string>
+		<string name="reboot_install_app_system">安裝為系統程式</string>
+		<string name="reboot_installing_app">安裝應用程式中...</string>
+		<string name="swipe_to_install_app">滑動已安裝 TWRP 應用程式</string>
+
+
+
+
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System 鏡像</string>
@@ -357,13 +379,16 @@
 		<string name="curr_tz">當前時區：%tw_time_zone%</string>
 		<string name="curr_tz_s">當前時區：</string>
 		<string name="set_tz_btn">設置時區</string>
-		<string name="settings_screen_hdr">螢幕</string>
+		<string name="settings_screen_hdr">屏幕和按鈕</string>
 		<string name="settings_screen_timeout_hdr">螢幕超時</string>
 		<string name="enable_timeout_chk">啟用螢幕超時</string>
 		<string name="screen_to_slider">螢幕超時時間（秒）：</string>
 		<string name="screen_to_slider_s">螢幕超時（0=禁用）：%tw_screen_timeout_secs%</string>
 		<string name="screen_to_na">螢幕超時設置不可用</string>
-		<string name="screen_bright_slider">螢幕亮度：%tw_brightness_pct%%</string>
+		<string name="screen_bright_slider">屏幕亮度：%tw_brightness_pct%%</string>
+		<string name="buttons_bright_slider">按鈕亮度: %tw_btn_brightness_pct%%</string>
+		<string name="dis_navbar_chk">禁用導航欄</string>
+		<string name="enbl_keys_chk">啟用設備按鈕</string>
 		<string name="screen_bright_na">螢幕亮度設置不可用</string>
 		<string name="vibration_hdr">振動</string>
 		<string name="button_vibration_hdr">按鈕振動</string>

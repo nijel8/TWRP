@@ -10,6 +10,27 @@
 		<resource name="font_m" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
 		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="90" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
+		<!-- Reset Lockscreen function strings -->
+		<string name="reset_lockscreen_btn">Скинути блокування екрану</string>
+		<string name="reset_lockscreen_hdr">Скинути блокування екрану</string>
+		<string name="reset_lockscreen_note1">Якщо ви не в змозі розблокувати екран</string>
+		<string name="reset_lockscreen_note2">після відновлення, зробіть наступне.</string>
+		<string name="swipe_to_reset_lockscreen">Свайп для скидання</string>
+		<string name="resetting_lockscreen">Скидання блокування екрану...</string>
+		<string name="reset_lockscreen_complete">Скидання блокування екрану завершено</string>
+
+                <!-- v.3.0.3-0 new TWRP App install strings -->
+                <string name="reboot_install_app_hdr">Встановити TWRP додаток?</string>
+		<string name="reboot_install_app1">Ви бажаєте встановити офіційний TWRP додаток?</string>
+		<string name="reboot_install_app2">Додаток може перевіряти нові версії TWRP.</string>
+		<string name="reboot_install_app_prompt_install">Пропонувати встановлення TWRP додатка</string>
+		<string name="reboot_install_app_system">Встановити як системне</string>
+		<string name="reboot_installing_app">Установка додатка...</string>
+		<string name="swipe_to_install_app">Свайп для установки</string>
+
+
+
+
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System Image</string>
