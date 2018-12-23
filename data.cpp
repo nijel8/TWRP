@@ -917,6 +917,12 @@ void DataManager::SetDefaultValues()
 	property_get("ro.product.device", code_name, "nitrogen");
 	DataManager::SetValue("tw_version_unofficial", "for " + string(code_name) + " by nijel8@XDA");
 
+	if (strcmp(code_name, "nitrogen") == 0) {
+		mPersist.SetValue("tw_samsung_navbar", "1");
+	} else {
+		mPersist.SetValue("tw_samsung_navbar", "0");
+	}
+
 	pthread_mutex_unlock(&m_valuesLock);
 }
 
