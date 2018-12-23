@@ -61,6 +61,8 @@ OpenRecoveryScript::VoidFunction OpenRecoveryScript::call_after_cli_command;
 
 #define SCRIPT_COMMAND_SIZE 512
 
+int mNavbarValue;
+
 int OpenRecoveryScript::check_for_script_file(void) {
 	if (!PartitionManager.Mount_By_Path(SCRIPT_FILE_CACHE, false)) {
 		LOGINFO("Unable to mount /cache for OpenRecoveryScript support.\n");
@@ -95,8 +97,8 @@ int OpenRecoveryScript::copy_script_file(string filename) {
 int OpenRecoveryScript::run_script_file(void) {
 	int ret_val = 0, cindex, line_len, i, remove_nl, install_cmd = 0, sideload = 0;
 	char script_line[SCRIPT_COMMAND_SIZE], command[SCRIPT_COMMAND_SIZE],
-	     value[SCRIPT_COMMAND_SIZE], mount[SCRIPT_COMMAND_SIZE],
-	     value1[SCRIPT_COMMAND_SIZE], value2[SCRIPT_COMMAND_SIZE];
+		 value[SCRIPT_COMMAND_SIZE], mount[SCRIPT_COMMAND_SIZE],
+		 value1[SCRIPT_COMMAND_SIZE], value2[SCRIPT_COMMAND_SIZE];
 	char *val_start, *tok;
 
 	FILE *fp = fopen(SCRIPT_FILE_TMP, "r");
@@ -424,6 +426,13 @@ int OpenRecoveryScript::run_script_file(void) {
 		}
 		gui_msg("done=Done.");
 	}
+	gui_highlight("survive_line1=Checking if TWRP will survive system boot!");
+	gui_highlight("survive_line2=Please, wait...");
+	if (TWFunc::Disable_Stock_Recovery_Replace(false) == 0) {
+		gui_highlight("done=Done.");
+	} else {
+		gui_err("failed=Failed");
+	}
 	if (sideload)
 		ret_val = 1; // Forces booting to the home page after sideload
 	return ret_val;
@@ -597,6 +606,8 @@ void OpenRecoveryScript::Run_OpenRecoveryScript(void) {
 	DataManager::SetValue("tw_action_text2", "");
 	DataManager::SetValue("tw_has_cancel", 0);
 	DataManager::SetValue("tw_show_reboot", 0);
+	DataManager::GetValue("tw_disable_navbar", mNavbarValue);
+	DataManager::SetValue("tw_disable_navbar", 1);
 	if (gui_startPage("action_page", 0, 1) != 0) {
 		LOGERR("Failed to load OpenRecoveryScript GUI page.\n");
 	}
@@ -624,10 +635,11 @@ int OpenRecoveryScript::Run_OpenRecoveryScript_Action() {
 			op_status = 0;
 		}
 	}
+	DataManager::SetValue("tw_disable_navbar", mNavbarValue);
 	if (reboot) {
 		// Disable stock recovery reflashing
-		TWFunc::Disable_Stock_Recovery_Replace();
-		usleep(2000000); // Sleep for 2 seconds before rebooting
+		//TWFunc::Disable_Stock_Recovery_Replace();
+		//usleep(2000000); // Sleep for 2 seconds before rebooting
 		TWFunc::tw_reboot(rb_system);
 		usleep(5000000); // Sleep for 5 seconds to allow reboot to occur
 	} else {

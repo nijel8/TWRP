@@ -837,6 +837,7 @@ void DataManager::SetDefaultValues()
 		mConst.SetValue("tw_brightness_max", maxBrightness);
 		mPersist.SetValue("tw_brightness", maxBrightness);
 		mPersist.SetValue("tw_brightness_pct", "100");
+        mPersist.SetValue("tw_disable_navbar", "0");
 #ifdef TW_SECONDARY_BRIGHTNESS_PATH
 		string secondfindbright = EXPAND(TW_SECONDARY_BRIGHTNESS_PATH);
 		if (secondfindbright != "" && TWFunc::Path_Exists(secondfindbright)) {
