@@ -9,22 +9,22 @@
 		<resource name="font_s" type="fontoverride" filename="RobotoCondensed-Regular.ttf" scale="100" />
 		<resource name="fixed" type="fontoverride" filename="DroidSansMono.ttf" scale="100" />
 		<!-- Reset Lockscreen function strings -->
-		<string name="reset_lockscreen_btn">Reset Lockscreen</string>
-		<string name="reset_lockscreen_hdr">Reset Lockscreen</string>
-		<string name="reset_lockscreen_note1">If you cannot pass Lockscreen security</string>
-		<string name="reset_lockscreen_note2">after backup restore you should do this.</string>
-		<string name="swipe_to_reset_lockscreen">Swipe to Reset Lockscreen</string>
-		<string name="resetting_lockscreen">Resetting Lockscreen...</string>
-		<string name="reset_lockscreen_complete">Reset Lockscreen Complete</string>
+		<string name="reset_lockscreen_btn">Redefinir Tela de bloqueio</string>
+		<string name="reset_lockscreen_hdr">Redefinir Tela de bloqueio</string>
+		<string name="reset_lockscreen_note1">Se você não conseguir passar pela segurança do Bloqueio de tela</string>
+		<string name="reset_lockscreen_note2">depois de restaurar o backup, tente fazer isto.</string>
+		<string name="swipe_to_reset_lockscreen">Deslizar para Redefinir a Tela de bloqueio</string>
+		<string name="resetting_lockscreen">Redefinindo Tela de bloqueio...</string>
+		<string name="reset_lockscreen_complete">Redefinição de Tela de bloqueio completa</string>
 
-                <!-- v.3.0.3-0 new TWRP App install strings -->
-                <string name="reboot_install_app_hdr">Install TWRP App?</string>
-		<string name="reboot_install_app1">Would you like to install the Official TWRP App?</string>
-		<string name="reboot_install_app2">The app can check for new TWRP versions.</string>
-		<string name="reboot_install_app_prompt_install">Prompt to install TWRP app if not installed</string>
-		<string name="reboot_install_app_system">Install as a System App</string>
-		<string name="reboot_installing_app">Installing App...</string>
-		<string name="swipe_to_install_app">Swipe to Install TWRP App</string>
+		<!-- v.3.0.3-0 new TWRP App install strings -->
+		<string name="reboot_install_app_hdr">Instalar App do TWRP?</string>
+		<string name="reboot_install_app1">Gostaria de instalar o App oficial do TWRP?</string>
+		<string name="reboot_install_app2">O app pode procurar por novas versões do TWRP.</string>
+		<string name="reboot_install_app_prompt_install">Prompt para instalar o app do TWRP se não estiver instalado</string>
+		<string name="reboot_install_app_system">Instalar como um App de Sistema</string>
+		<string name="reboot_installing_app">Instalando App...</string>
+		<string name="swipe_to_install_app">Deslize para instalar o App do TWRP</string>
 
                 <!-- v.3.1.1-3 Xposed functions strings -->
                 <string name="advanced2_btn">More...</string>
