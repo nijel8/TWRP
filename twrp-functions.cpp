@@ -40,6 +40,7 @@
 #include "twrp-functions.hpp"
 #include "twcommon.h"
 #include "gui/gui.hpp"
+#include "gui/pages.hpp"
 #ifndef BUILD_TWRPTAR_MAIN
 #include "data.hpp"
 #include "partitions.hpp"
@@ -1126,29 +1127,9 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 void TWFunc::Disable_Stock_Recovery_Replace(void) {
-	if (PartitionManager.Mount_By_Path(PartitionManager.Get_Android_Root_Path(), false)) {
-    if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
-        // Respect tw_mount_system_ro setting set by user
-        // If "verify" flag is set in fstab, /system shouldn't be changed in anyway
-        gui_msg("Renaming stock recovery file/flash script not allowed! Uncheck Mount > Mount system partition read-only checkbox.");
-        return;
-    }
-
-	if (PartitionManager.Mount_By_Path("/system", false)) {
-		// Disable flashing of stock recovery
-		if (TWFunc::Path_Exists("/system/recovery-from-boot.p")) {
-			rename("/system/recovery-from-boot.p", "/system/recovery-from-boot.p.bak");
-			gui_msg("rename_stock=Renamed stock recovery file in /system to prevent the stock ROM from replacing TWRP.");
-			sync();
-		}
-		PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
-		} else if (TWFunc::Path_Exists("/system/bin/install-recovery.sh")) {
-            rename("/system/bin/install-recovery.sh", "/system/bin/install-recovery.sh.bak");
-            gui_msg("rename_stock=Renamed stock recovery flash script in /system/bin to prevent the stock ROM from replacing TWRP.");
-            sync();
-        }
-		PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
-	}
+    LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.");
+    gui_startPage("singleaction_reboot", 0, 1);
+    check_and_run_script("/sbin/twrp_persist", "Persist TWRP");
 }
 
 unsigned long long TWFunc::IOCTL_Get_Block_Size(const char* block_device) {
