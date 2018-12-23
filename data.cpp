@@ -235,6 +235,8 @@ int DataManager::ResetDefaults()
 	pthread_mutex_unlock(&m_valuesLock);
 
 	SetDefaultValues();
+	Flush();
+	ReadSettingsFile();
 	return 0;
 }
 
@@ -905,7 +907,11 @@ void DataManager::SetDefaultValues()
 	mData.SetValue("tw_app_install_status", "0"); // 0 = no status, 1 = not installed, 2 = already installed
 #endif
 
-        mData.SetValue("tw_enable_adb_backup", "0");
+	mData.SetValue("tw_enable_adb_backup", "0");
+
+	char code_name[PROPERTY_VALUE_MAX];
+	property_get("ro.product.device", code_name, "nitrogen");
+	DataManager::SetValue("tw_version_unofficial", "for " + string(code_name) + " by nijel8@XDA");
 
 	pthread_mutex_unlock(&m_valuesLock);
 }
