@@ -1127,17 +1127,17 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 int TWFunc::Disable_Stock_Recovery_Replace(bool page) {
-	if (PartitionManager.Mount_By_Path("/system", false)) {
+	if (PartitionManager.Mount_By_Path(PartitionManager.Get_Android_Root_Path(), false)) {
 		if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
-			PartitionManager.UnMount_By_Path("/system", false);
+			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
 			return 0;
 		}
 		if (!Path_Exists("/system/recovery-from-boot.p")) {
-			PartitionManager.UnMount_By_Path("/system", false);
+			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
 			return 0;
 		}
 		if (!Path_Exists("/system/bin/install-recovery.sh")) {
-			PartitionManager.UnMount_By_Path("/system", false);
+			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
 			return 0;
 		}
 		PartitionManager.UnMount_By_Path("/system", false);
