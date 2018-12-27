@@ -1636,7 +1636,7 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 	}
 
 	int pwret = -1;
-	pid_t pid = fork();
+/*	pid_t pid = fork();
 	if (pid < 0) {
 		LOGERR("fork failed\n");
 		return -1;
@@ -1654,7 +1654,7 @@ int TWPartitionManager::Decrypt_Device(string Password) {
 		else
 			pwret = WEXITSTATUS(status) ? -1 : 0;
 	}
-
+*/
 #ifdef TW_CRYPTO_USE_SYSTEM_VOLD
 	if (pwret != 0) {
 		pwret = vold_decrypt(Password);
