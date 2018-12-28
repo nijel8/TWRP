@@ -74,6 +74,7 @@ namespace {
 #define LOGERROR(...) do { printf(__VA_ARGS__); if (fp_kmsg) { fprintf(fp_kmsg, "[VOLD_DECRYPT]E:" __VA_ARGS__); fflush(fp_kmsg); } } while (0)
 
 FILE *fp_kmsg = NULL;
+int sdkver = 20;
 
 
 /* Debugging Functions */
@@ -766,7 +767,6 @@ vector<AdditionalService> Get_List_Of_Additional_Services(void) {
 void Set_Needed_Properties(void) {
 	// vold won't start without ro.storage_structure on Kitkat
 	string sdkverstr = TWFunc::System_Property_Get("ro.build.version.sdk");
-	int sdkver = 20;
 	if (!sdkverstr.empty()) {
 		sdkver = atoi(sdkverstr.c_str());
 	}
@@ -857,6 +857,8 @@ int Exec_vdc_cryptfs(const string& command, const string& argument, vdc_ReturnVa
 			pid_t retpid = waitpid(pid, &status, WNOHANG);
 			while (true) {
 				for (int i = 0; i < 2; ++i) {
+					// clear strout from leftovers of previous runs
+					strout[i].clear();
 					count = read(pipe_fd[i][0], buffer, sizeof(buffer));
 					if (count == -1) {
 						if (errno == EINTR)
@@ -934,11 +936,19 @@ int Run_vdc(const string& Password) {
 	gettimeofday(&t1, NULL);
 	t2 = t1;
 	while ((t2.tv_sec - t1.tv_sec) < 5) {
-		// cryptfs getpwtype returns: R1=213(PasswordTypeResult)   R2=?   R3="password", "pattern", "pin", "default"
-		res = Exec_vdc_cryptfs("getpwtype", "", &vdcResult);
-		if (vdcResult.ResponseCode == PASSWORD_TYPE_RESULT) {
-			res = 0;
-			break;
+		// vdc in sdk 28 doesn't support custom passwords
+		if (sdkver < 28) {
+			// cryptfs getpwtype returns: R1=213(PasswordTypeResult)   R2=?   R3="password", "pattern", "pin", "default"
+			res = Exec_vdc_cryptfs("getpwtype", "", &vdcResult);
+			if (vdcResult.ResponseCode == PASSWORD_TYPE_RESULT) {
+				res = 0;
+				break;
+			}
+		} else {
+			res = Exec_vdc_cryptfs("mountdefaultencrypted", "", &vdcResult);
+			if (res == 0) {
+				break;
+			}
 		}
 		LOGINFO("Retrying connection to vold (Reason: %s)\n", vdcResult.Output.c_str());
 		usleep(SLEEP_MIN_USEC); // vdc usually usleep(10000), but that causes too many unnecessary attempts
@@ -957,36 +967,41 @@ int Run_vdc(const string& Password) {
 		return VD_ERR_VDC_FAILED_TO_CONNECT;
 
 
-	// Input password from GUI, or default password
-	res = Exec_vdc_cryptfs("checkpw", Password, &vdcResult);
-	if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
-		return VD_ERR_VOLD_OPERATION_TIMEDOUT;
-	else if (res)
-		return VD_ERR_FORK_EXECL_ERROR;
-
-	LOGINFO("vdc cryptfs result (passwd): %s\n", vdcResult.Output.c_str());
-	/*
-	if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
-		return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
-	*/
-
-	if (vdcResult.Message != 0) {
-		// try falling back to Lollipop hex passwords
-		string hexPassword = convert_key_to_hex_ascii(Password);
-		res = Exec_vdc_cryptfs("checkpw", hexPassword, &vdcResult);
+	if (sdkver < 28) {
+		// Input password from GUI, or default password
+		res = Exec_vdc_cryptfs("checkpw", Password, &vdcResult);
 		if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
 			return VD_ERR_VOLD_OPERATION_TIMEDOUT;
 		else if (res)
 			return VD_ERR_FORK_EXECL_ERROR;
 
-		LOGINFO("vdc cryptfs result (hex_pw): %s\n", vdcResult.Output.c_str());
+		LOGINFO("vdc cryptfs result (passwd): %s\n", vdcResult.Output.c_str());
 		/*
 		if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
 			return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
 		*/
+
+		if (vdcResult.Message != 0) {
+			// try falling back to Lollipop hex passwords
+			string hexPassword = convert_key_to_hex_ascii(Password);
+			res = Exec_vdc_cryptfs("checkpw", hexPassword, &vdcResult);
+			if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
+				return VD_ERR_VOLD_OPERATION_TIMEDOUT;
+			else if (res)
+				return VD_ERR_FORK_EXECL_ERROR;
+
+			LOGINFO("vdc cryptfs result (hex_pw): %s\n", vdcResult.Output.c_str());
+			/*
+			if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
+				return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
+			*/
+		}
+	} else {
+		// sdk 28 vdc always returns 0 on success
+		vdcResult.Message = res;
 	}
 
-	// vdc's return value is dependant upon source origin, it will either
+	// sdk < 28 vdc's return value is dependant upon source origin, it will either
 	// return 0 or ResponseCode, so disregard and focus on decryption instead
 	if (vdcResult.Message == 0) {
 		// Decryption successful wait for crypto blk dev
@@ -1023,6 +1038,16 @@ int Vold_Decrypt_Core(const string& Password) {
 		LOGINFO("ERROR: vdc not found, aborting.\n");
 		return VD_ERR_MISSING_VDC;
 	}
+
+	if (!PartitionManager.Mount_By_Path("/vendor", true)) {
+		return -11;
+	}
+
+	//if (!PartitionManager.Mount_By_Path("/firmware", true)) {
+	//	return -12;
+	//}
+
+	TWFunc::Exec_Cmd("dump_footer backup");
 
 	fp_kmsg = fopen("/dev/kmsg", "a");
 
@@ -1116,6 +1141,16 @@ int Vold_Decrypt_Core(const string& Password) {
 		umount2(PartitionManager.Get_Android_Root_Path().c_str(), MNT_DETACH);
 	}
 
+	if (!PartitionManager.UnMount_By_Path("/vendor", true)) {
+		LOGINFO("WARNING: vendor could not be unmounted normally!\n");
+		umount2("/vendor", MNT_DETACH);
+	}
+
+	//if (!PartitionManager.UnMount_By_Path("/firmware", true)) {
+	//	LOGINFO("WARNING: firmware could not be unmounted normally!\n");
+	//	umount2("/firmware", MNT_DETACH);
+	//}
+
 	LOGINFO("Finished.\n");
 
 #ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
@@ -1135,6 +1170,8 @@ int Vold_Decrypt_Core(const string& Password) {
 		fflush(fp_kmsg);
 		fclose(fp_kmsg);
 	}
+
+	TWFunc::Exec_Cmd("dump_footer restore");
 
 	return res;
 }
