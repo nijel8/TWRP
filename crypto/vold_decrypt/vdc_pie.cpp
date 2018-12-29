@@ -53,7 +53,7 @@ static android::sp<android::IBinder> getServiceAggressive() {
     for (int i = 0; i < 5000; i++) {
         res = sm->checkService(name);
         if (res) {
-            printf("vdc_pie: Waited %d ms for vold\n", (i * 10));
+            printf("vdc_pie: Got vold, waited %d ms\n", (i * 10));
             break;
         }
         usleep(10000); // 10ms
@@ -64,8 +64,12 @@ static android::sp<android::IBinder> getServiceAggressive() {
 static int checkStatus(android::binder::Status status) {
     if (status.isOk()) return 0;
     std::string ret = status.toString8().string();
-    printf("vdc_pie: Decryption failed, vold service returned: %s."
-        " See logcat for details.\n", ret.c_str());
+#ifdef TWRP_INCLUDE_LOGCAT
+    printf("vdc_pie: Decryption failed, vold service returned: %s,"
+		" see logcat for details\n", ret.c_str());
+#else
+	printf("vdc_pie: Decryption failed, vold service returned: %s\n", ret.c_str());
+#endif
     return -1;
 }
 

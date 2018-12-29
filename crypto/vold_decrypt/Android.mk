@@ -116,6 +116,9 @@ ifeq ($(TW_INCLUDE_CRYPTO), true)
             LOCAL_STATIC_LIBRARIES := libvold_binder
             LOCAL_SHARED_LIBRARIES := libbase libcutils libutils libbinder
             LOCAL_CFLAGS := -Wall
+            ifeq ($(TWRP_INCLUDE_LOGCAT), true)
+                LOCAL_CFLAGS += -DTWRP_INCLUDE_LOGCAT
+            endif
             ifneq ($(TARGET_ARCH), arm64)
                 ifneq ($(TARGET_ARCH), x86_64)
                     LOCAL_LDFLAGS += -Wl,-dynamic-linker,/sbin/linker

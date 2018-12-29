@@ -1113,14 +1113,6 @@ int Vold_Decrypt_Core(const string& Password) {
             return VD_ERR_UNABLE_TO_MOUNT_VENDOR;
     }
 
-	if (!PartitionManager.Mount_By_Path("/vendor", true)) {
-		return -11;
-	}
-
-	//if (!PartitionManager.Mount_By_Path("/firmware", true)) {
-	//	return -12;
-	//}
-
 	fp_kmsg = fopen("/dev/kmsg", "a");
 
 	LOGINFO("TW_CRYPTO_USE_SYSTEM_VOLD := true\n");
