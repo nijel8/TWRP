@@ -777,6 +777,82 @@ void Set_Needed_Properties(void) {
 	}
 }
 
+static unsigned int get_blkdev_size(int fd) {
+	unsigned long nr_sec;
+
+	if ( (ioctl(fd, BLKGETSIZE, &nr_sec)) == -1) {
+		nr_sec = 0;
+	}
+
+	return (unsigned int) nr_sec;
+}
+
+#define CRYPT_FOOTER_OFFSET 0x4000
+static char footer[16 * 1024];
+
+int footer_br(const string& command) {
+	int fd;
+	const char* userdata_path = "/dev/block/bootdevice/by-name/userdata";
+	unsigned int nr_sec;
+	off64_t offset;
+
+	if (command == "backup") {
+		fd = open(userdata_path, O_RDONLY);
+		if (fd < 0) {
+			LOGERROR("E:footer_br: Cannot open '%s': %s\n", userdata_path, strerror(errno));
+			return -1;
+		}
+		if ((nr_sec = get_blkdev_size(fd))) {
+			offset = ((off64_t)nr_sec * 512) - CRYPT_FOOTER_OFFSET;
+		} else {
+			LOGERROR("E:footer_br: Failed to get offset\n");
+			close(fd);
+			return -1;
+		}
+		if (lseek64(fd, offset, SEEK_SET) == -1) {
+			LOGERROR("E:footer_br: Failed to lseek64\n");
+			close(fd);
+			return -1;
+		}
+		if (read(fd, footer, sizeof(footer)) != sizeof(footer)) {
+			LOGERROR("E:footer_br: Failed to read: %s\n", strerror(errno));
+			close(fd);
+			return -1;
+		}
+		close(fd);
+
+		LOGINFO("I:footer_br: userdata crypto footer backed up to %s\n", footer);
+	} else if (command == "restore") {
+		fd = open(userdata_path, O_WRONLY);
+		if ((nr_sec = get_blkdev_size(fd))) {
+			offset = ((off64_t)nr_sec * 512) - CRYPT_FOOTER_OFFSET;
+		} else {
+			LOGERROR("E:footer_br: Failed to get offset\n");
+			close(fd);
+			return -1;
+		}
+		if (lseek64(fd, offset, SEEK_SET) == -1) {
+			LOGERROR("E:footer_br: Failed to lseek64\n");
+			close(fd);
+			return -1;
+		}
+		if (write(fd, footer, sizeof(footer)) != sizeof(footer)) {
+			LOGERROR("E:footer_br: Failed to write: %s\n", strerror(errno));
+			close(fd);
+			return -1;
+		}
+		close(fd);
+		if( remove(footer) != 0 ) {
+			LOGERROR("E:footer_br: Error deleting backup after restore\n");
+		}
+
+		LOGINFO("I:footer_br: userdata crypto footer restored from %s\n", footer);
+	} else {
+		LOGERROR("E:footer_br: Usage: footer_br backup|restore\n");
+		return -1;
+	}
+	return 0;
+}
 
 /* vdc Functions */
 typedef struct {
@@ -801,8 +877,12 @@ int Exec_vdc_cryptfs(const string& command, const string& argument, vdc_ReturnVa
 		}
 	}
 
-	const char *cmd[] = { "/system/bin/vdc", "cryptfs" };
+	const char *cmd[] = { "/sbin/vdc_pie", "cryptfs" };
+	if (sdkver < 28)
+		cmd[0] = "/system/bin/vdc";
 	const char *env[] = { "LD_LIBRARY_PATH=/system/lib64:/system/lib", NULL };
+
+	LOGINFO("sdkver: %d, using %s\n", sdkver, cmd[0]);
 
 #ifdef TW_CRYPTO_SYSTEM_VOLD_DEBUG
 	string log_name = "/tmp/strace_vdc_" + command;
@@ -932,73 +1012,65 @@ int Run_vdc(const string& Password) {
 
 	LOGINFO("About to run vdc...\n");
 
-	// Wait for vold connection
-	gettimeofday(&t1, NULL);
-	t2 = t1;
-	while ((t2.tv_sec - t1.tv_sec) < 5) {
-		// vdc in sdk 28 doesn't support custom passwords
-		if (sdkver < 28) {
+	if (sdkver < 28) {
+		// Wait for vold connection
+		gettimeofday(&t1, NULL);
+		t2 = t1;
+		while ((t2.tv_sec - t1.tv_sec) < 5) {
 			// cryptfs getpwtype returns: R1=213(PasswordTypeResult)   R2=?   R3="password", "pattern", "pin", "default"
 			res = Exec_vdc_cryptfs("getpwtype", "", &vdcResult);
 			if (vdcResult.ResponseCode == PASSWORD_TYPE_RESULT) {
 				res = 0;
 				break;
 			}
-		} else {
-			res = Exec_vdc_cryptfs("mountdefaultencrypted", "", &vdcResult);
-			if (res == 0) {
-				break;
-			}
+			LOGINFO("Retrying connection to vold (Reason: %s)\n", vdcResult.Output.c_str());
+			usleep(SLEEP_MIN_USEC); // vdc usually usleep(10000), but that causes too many unnecessary attempts
+			gettimeofday(&t2, NULL);
 		}
-		LOGINFO("Retrying connection to vold (Reason: %s)\n", vdcResult.Output.c_str());
-		usleep(SLEEP_MIN_USEC); // vdc usually usleep(10000), but that causes too many unnecessary attempts
-		gettimeofday(&t2, NULL);
+
+		if (res == 0 && (t2.tv_sec - t1.tv_sec) < 5)
+			LOGINFO("Connected to vold: %s\n", vdcResult.Output.c_str());
+		else if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
+			return VD_ERR_VOLD_OPERATION_TIMEDOUT; // should never happen for getpwtype
+		else if (res)
+			return VD_ERR_FORK_EXECL_ERROR;
+		else if (vdcResult.ResponseCode != -1)
+			return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
+		else
+			return VD_ERR_VDC_FAILED_TO_CONNECT;
 	}
 
-	if (res == 0 && (t2.tv_sec - t1.tv_sec) < 5)
-		LOGINFO("Connected to vold: %s\n", vdcResult.Output.c_str());
-	else if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
-		return VD_ERR_VOLD_OPERATION_TIMEDOUT; // should never happen for getpwtype
+	// Input password from GUI, or default password
+	res = Exec_vdc_cryptfs("checkpw", Password, &vdcResult);
+	if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
+		return VD_ERR_VOLD_OPERATION_TIMEDOUT;
 	else if (res)
 		return VD_ERR_FORK_EXECL_ERROR;
-	else if (vdcResult.ResponseCode != -1)
+
+	LOGINFO("vdc cryptfs result (passwd): %s\n", vdcResult.Output.c_str());
+	/*
+	if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
 		return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
-	else
-		return VD_ERR_VDC_FAILED_TO_CONNECT;
+	*/
 
+	if (sdkver >= 28) {
+		vdcResult.Message = res;
+	}
 
-	if (sdkver < 28) {
-		// Input password from GUI, or default password
-		res = Exec_vdc_cryptfs("checkpw", Password, &vdcResult);
+	if (vdcResult.Message != 0) {
+		// try falling back to Lollipop hex passwords
+		string hexPassword = convert_key_to_hex_ascii(Password);
+		res = Exec_vdc_cryptfs("checkpw", hexPassword, &vdcResult);
 		if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
 			return VD_ERR_VOLD_OPERATION_TIMEDOUT;
 		else if (res)
 			return VD_ERR_FORK_EXECL_ERROR;
 
-		LOGINFO("vdc cryptfs result (passwd): %s\n", vdcResult.Output.c_str());
+		LOGINFO("vdc cryptfs result (hex_pw): %s\n", vdcResult.Output.c_str());
 		/*
 		if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
 			return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
 		*/
-
-		if (vdcResult.Message != 0) {
-			// try falling back to Lollipop hex passwords
-			string hexPassword = convert_key_to_hex_ascii(Password);
-			res = Exec_vdc_cryptfs("checkpw", hexPassword, &vdcResult);
-			if (res == VD_ERR_VOLD_OPERATION_TIMEDOUT)
-				return VD_ERR_VOLD_OPERATION_TIMEDOUT;
-			else if (res)
-				return VD_ERR_FORK_EXECL_ERROR;
-
-			LOGINFO("vdc cryptfs result (hex_pw): %s\n", vdcResult.Output.c_str());
-			/*
-			if (res == 0 && vdcResult.ResponseCode != COMMAND_OKAY)
-				return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
-			*/
-		}
-	} else {
-		// sdk 28 vdc always returns 0 on success
-		vdcResult.Message = res;
 	}
 
 	// sdk < 28 vdc's return value is dependant upon source origin, it will either
@@ -1046,8 +1118,6 @@ int Vold_Decrypt_Core(const string& Password) {
 	//if (!PartitionManager.Mount_By_Path("/firmware", true)) {
 	//	return -12;
 	//}
-
-	TWFunc::Exec_Cmd("dump_footer backup");
 
 	fp_kmsg = fopen("/dev/kmsg", "a");
 
@@ -1105,7 +1175,21 @@ int Vold_Decrypt_Core(const string& Password) {
 			}
 		}
 #endif
-		res = Run_vdc(Password);
+
+		if (footer_br("backup") == 0) {
+			LOGINFO("footer_br: crypto footer backed up\n");
+
+			res = Run_vdc(Password);
+
+			if (footer_br("restore") == 0)
+				LOGINFO("footer_br: crypto footer restored\n");
+			else
+				LOGERROR("footer_br: Failed to restore crypto footer\n");
+		} else {
+			LOGERROR("footer_br: Failed to backup crypto footer, skipping decrypt to preserve data. Reboot recovery to try again...\n");
+			res = -1;
+		}
+
 
 		if (res != 0) {
 			LOGINFO("Decryption failed\n");
@@ -1170,8 +1254,6 @@ int Vold_Decrypt_Core(const string& Password) {
 		fflush(fp_kmsg);
 		fclose(fp_kmsg);
 	}
-
-	TWFunc::Exec_Cmd("dump_footer restore");
 
 	return res;
 }
