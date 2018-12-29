@@ -820,8 +820,6 @@ int footer_br(const string& command) {
 			return -1;
 		}
 		close(fd);
-
-		LOGINFO("I:footer_br: userdata crypto footer backed up to %s\n", footer);
 	} else if (command == "restore") {
 		fd = open(userdata_path, O_WRONLY);
 		if ((nr_sec = get_blkdev_size(fd))) {
@@ -842,13 +840,8 @@ int footer_br(const string& command) {
 			return -1;
 		}
 		close(fd);
-		if( remove(footer) != 0 ) {
-			LOGERROR("E:footer_br: Error deleting backup after restore\n");
-		}
-
-		LOGINFO("I:footer_br: userdata crypto footer restored from %s\n", footer);
 	} else {
-		LOGERROR("E:footer_br: Usage: footer_br backup|restore\n");
+        LOGERROR("E:footer_br: wrong command argument: %s\n", command.c_str());
 		return -1;
 	}
 	return 0;
@@ -877,6 +870,7 @@ int Exec_vdc_cryptfs(const string& command, const string& argument, vdc_ReturnVa
 		}
 	}
 
+	// getpwtype and checkpw commands are removed from Pie vdc, using modified vdc_pie
 	const char *cmd[] = { "/sbin/vdc_pie", "cryptfs" };
 	if (sdkver < 28)
 		cmd[0] = "/system/bin/vdc";
@@ -1012,6 +1006,7 @@ int Run_vdc(const string& Password) {
 
 	LOGINFO("About to run vdc...\n");
 
+	// Pie vdc communicates with vold directly, no socket so lets not waste time
 	if (sdkver < 28) {
 		// Wait for vold connection
 		gettimeofday(&t1, NULL);
@@ -1053,6 +1048,8 @@ int Run_vdc(const string& Password) {
 		return VD_ERR_VOLD_UNEXPECTED_RESPONSE;
 	*/
 
+	// our vdc returns vold binder op status,
+    // we care about status.ok() only which is 0
 	if (sdkver >= 28) {
 		vdcResult.Message = res;
 	}
@@ -1075,6 +1072,7 @@ int Run_vdc(const string& Password) {
 
 	// sdk < 28 vdc's return value is dependant upon source origin, it will either
 	// return 0 or ResponseCode, so disregard and focus on decryption instead
+	// our vdc always returns 0 on success
 	if (vdcResult.Message == 0) {
 		// Decryption successful wait for crypto blk dev
 		Wait_For_Property("ro.crypto.fs_crypto_blkdev");
@@ -1110,6 +1108,10 @@ int Vold_Decrypt_Core(const string& Password) {
 		LOGINFO("ERROR: vdc not found, aborting.\n");
 		return VD_ERR_MISSING_VDC;
 	}
+    if(PartitionManager.Find_Partition_By_Path("/vendor")) {
+        if (!PartitionManager.Mount_By_Path("/vendor", true))
+            return VD_ERR_UNABLE_TO_MOUNT_VENDOR;
+    }
 
 	if (!PartitionManager.Mount_By_Path("/vendor", true)) {
 		return -11;
@@ -1176,20 +1178,28 @@ int Vold_Decrypt_Core(const string& Password) {
 		}
 #endif
 
-		if (footer_br("backup") == 0) {
-			LOGINFO("footer_br: crypto footer backed up\n");
-
-			res = Run_vdc(Password);
-
-			if (footer_br("restore") == 0)
-				LOGINFO("footer_br: crypto footer restored\n");
-			else
-				LOGERROR("footer_br: Failed to restore crypto footer\n");
+		/*
+		* Oreo and Pie vold on some devices alters footer causing
+		* system to ask for decryption password at next boot although
+		* password haven't changed so we save footer before and restore it
+		* after vold operations
+		*/
+		if (sdkver > 25) {
+			if (footer_br("backup") == 0) {
+				LOGINFO("footer_br: crypto footer backed up\n");
+				res = Run_vdc(Password);
+				if (footer_br("restore") == 0)
+					LOGINFO("footer_br: crypto footer restored\n");
+				else
+					LOGERROR("footer_br: Failed to restore crypto footer\n");
+			} else {
+				LOGERROR("footer_br: Failed to backup crypto footer, \
+					skipping decrypt to prevent data loss. Reboot recovery to try again...\n");
+				res = -1;
+			}
 		} else {
-			LOGERROR("footer_br: Failed to backup crypto footer, skipping decrypt to preserve data. Reboot recovery to try again...\n");
-			res = -1;
+			res = Run_vdc(Password);
 		}
-
 
 		if (res != 0) {
 			LOGINFO("Decryption failed\n");
@@ -1225,15 +1235,12 @@ int Vold_Decrypt_Core(const string& Password) {
 		umount2(PartitionManager.Get_Android_Root_Path().c_str(), MNT_DETACH);
 	}
 
-	if (!PartitionManager.UnMount_By_Path("/vendor", true)) {
-		LOGINFO("WARNING: vendor could not be unmounted normally!\n");
-		umount2("/vendor", MNT_DETACH);
-	}
-
-	//if (!PartitionManager.UnMount_By_Path("/firmware", true)) {
-	//	LOGINFO("WARNING: firmware could not be unmounted normally!\n");
-	//	umount2("/firmware", MNT_DETACH);
-	//}
+    if (PartitionManager.Is_Mounted_By_Path("/vendor")) {
+        if (!PartitionManager.UnMount_By_Path("/vendor", true)) {
+            LOGINFO("WARNING: vendor could not be unmounted normally!\n");
+            umount2("/vendor", MNT_DETACH);
+        }
+    }
 
 	LOGINFO("Finished.\n");
 
