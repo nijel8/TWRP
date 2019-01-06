@@ -1127,6 +1127,16 @@ std::string TWFunc::to_string(unsigned long value) {
 }
 
 int TWFunc::Disable_Stock_Recovery_Replace(bool page) {
+    /*
+     * Remove block.map file if exists after OTA install
+     * to not trigger fingerprint override at next recovery boot.
+     */
+    if (PartitionManager.Mount_By_Path("/cache", false)) {
+        LOGINFO("Removing /cache/recovery/block.map after OTA\n");
+        unlink("/cache/recovery/block.map");
+        PartitionManager.UnMount_By_Path("/cache", false);
+    }
+
 	if (PartitionManager.Mount_By_Path(PartitionManager.Get_Android_Root_Path(), false)) {
 		if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
 			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
