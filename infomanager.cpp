@@ -25,6 +25,7 @@
 #include "twcommon.h"
 #include "partitions.hpp"
 #include "set_metadata.h"
+#include "data.hpp"
 
 using namespace std;
 
@@ -45,6 +46,21 @@ InfoManager::~InfoManager(void) {
 
 void InfoManager::SetFile(const string& filename) {
 	File = filename;
+    if (File == PERSIST_SETTINGS_FILE) {
+        struct stat st;
+        if (stat("/persist/.twrps", &st) == 0) {
+            ifstream src("/persist/.twrps", ios::binary);
+            ofstream dest(PERSIST_SETTINGS_FILE, ios::binary);
+            dest << src.rdbuf();
+            remove("/persist/.twrps");
+            if (stat("/persist/.sha1boot", &st) == 0) {
+                ifstream src("/persist/.sha1boot", ios::binary);
+                ofstream dest("/persist/TWRP/.sha1boot", ios::binary);
+                dest << src.rdbuf();
+                remove("/persist/.sha1boot");
+            }
+        }
+    }
 }
 
 void InfoManager::SetFileVersion(int version) {

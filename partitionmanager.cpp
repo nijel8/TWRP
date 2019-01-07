@@ -229,7 +229,7 @@ int TWPartitionManager::Process_Fstab(string Fstab_Filename, bool Display_Error)
 			}
 		}
 
-		if (!settings_partition && (*iter)->Is_Settings_Storage && (*iter)->Is_Present)
+		if (!settings_partition && (*iter)->Is_Settings_Storage && (*iter)->Is_Present && !(*iter)->Is_Encrypted)
 			settings_partition = (*iter);
 		else
 			(*iter)->Is_Settings_Storage = false;
@@ -1594,10 +1594,21 @@ void TWPartitionManager::Post_Decrypt(const string& Block_Device) {
 			dat->Storage_Path = "/data/media/0";
 			dat->Symlink_Path = dat->Storage_Path;
 			DataManager::SetValue("tw_storage_path", "/data/media/0");
-			std::string settings_path;
-			if (DataManager::GetValue("tw_settings_path", settings_path) != 0) {
-				DataManager::SetValue("tw_settings_path", "/data/media/0");
-			}
+			DataManager::SetValue("tw_settings_path", "/data/media/0");
+            if (!TWFunc::Path_Exists("/data/media/0/TWRP/.twrps")
+                    && TWFunc::Path_Exists(PERSIST_SETTINGS_FILE)) {
+                ifstream src(PERSIST_SETTINGS_FILE, ios::binary);
+                ofstream dest("/data/media/0/TWRP/.twrps", ios::binary);
+                dest << src.rdbuf();
+                if (!TWFunc::Path_Exists("/data/media/0/TWRP/.sha1boot")
+                        && TWFunc::Path_Exists("/persist/TWRP/.sha1boot")) {
+                    ifstream src("/persist/TWRP/.sha1boot", ios::binary);
+                    ofstream dest("/data/media/0/TWRP/.sha1boot", ios::binary);
+                    dest << src.rdbuf();
+                }
+                LOGINFO("Moved current settings from /persist to /data\n");
+            }
+            UnMount_By_Path("/persist", false);
 			dat->UnMount(false);
 		}
 		Update_System_Details();
