@@ -30,6 +30,12 @@
         <string name="survive_line1">Checking if TWRP will survive system boot!</string>
         <string name="survive_line2">Please, wait...</string>
 
+        <!-- Backup/restore boot strings -->
+        <string name="boot_restoring">Boot patch detected, restoring original boot.img...</string>
+        <string name="boot_restored">Original boot.img restored.</string>
+        <string name="boot_backing_up">Backing up /boot...</string>
+        <string name="boot_backed_up">/boot backed up to '/cust/.boot_twrp.img'</string>
+
 		<!-- Partition display names -->
 		<string name="system">System</string>
 		<string name="system_image">System Image</string>

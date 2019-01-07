@@ -21,6 +21,9 @@
 #define _GNU_SOURCE
 #endif
 
+#include <fstream>
+#include <iterator>
+
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -71,6 +74,7 @@ static const char* properties_path = "/dev/__properties__";
 static const char* properties_path_renamed = "/dev/__properties_kk__";
 static bool legacy_props_env_initd = false;
 static bool legacy_props_path_modified = false;
+static bool should_backup_boot = false;
 
 enum zip_type {
 	UNKNOWN_ZIP_TYPE = 0,
@@ -155,6 +159,46 @@ static int Prepare_Update_Binary(const char *path, ZipWrap *Zip, int* wipe_cache
 		LOGERR("Could not extract '%s'\n", ASSUMED_UPDATE_BINARY_NAME);
 		return INSTALL_ERROR;
 	}
+
+    // restore original boot.img if incremental OTA is apllying boot.img.p
+    if (!Zip->ExtractEntry("META-INF/com/google/android/updater-script",
+            "/tmp/updater-script.tmp", 0644)) {
+        Zip->Close();
+        LOGINFO("OTA: Failed to extract updater-script from update package.\n");
+    } else {
+        Zip->Close();
+        ifstream ifs("/tmp/updater-script.tmp");
+        string updater_script(istreambuf_iterator<char>{ifs}, {});
+        int s = (int) updater_script.size();
+        if (s < 100) {
+            LOGINFO("OTA: Failed to read extracted updater-script. Size is %d\n", s);
+        } else {
+            if (updater_script.find("apply_patch_check(\"EMMC:/dev/block"
+                    "/bootdevice/by-name/boot:") != std::string::npos) {
+                should_backup_boot = true;
+                if (!PartitionManager.Mount_By_Path("/cust", false)) {
+                    LOGINFO("OTA: Failed to mount /cust. Incremental OTA install might fail!\n");
+                } else {
+                    if(!TWFunc::Path_Exists("/cust/.boot_twrp.img")) {
+                         LOGINFO("OTA: Original boot.img backup missing. Incremental OTA install might fail!\n");
+                    } else {
+                        gui_msg(Msg("boot_restoring=Boot patch detected, restoring original boot.img...\n"));
+                        if(TWFunc::Exec_Cmd("flash_image /dev/block/bootdevice/by-name/boot"
+                            " /cust/.boot_twrp.img") != 0) {
+                            LOGINFO("OTA: Failed to restore original boot.img. Incremental OTA install might fail!\n");
+                        } else {
+                            gui_msg(Msg("boot_restored=Original boot.img restored.\n"));
+                        }
+                    }
+                }
+            } else if (updater_script.find("package_extract_file(\"boot.img") != std::string::npos) {
+                should_backup_boot = true;
+            }
+            if (!should_backup_boot) {
+                PartitionManager.UnMount_By_Path("/cust", false);
+            }
+        }
+    }
 
 	// If exists, extract file_contexts from the zip file
 	if (!Zip->EntryExists("file_contexts")) {
@@ -459,5 +503,25 @@ int TWinstall_zip(const char* path, int* wipe_cache) {
 #ifdef USE_MINZIP
 	sysReleaseMap(&map);
 #endif
+
+    if (ret_val == INSTALL_SUCCESS && should_backup_boot) {
+        // Need to backup /boot
+        if (!PartitionManager.Mount_By_Path("/cust", false)) {
+            LOGINFO("OTA: Failed to mount /cust. Cannot backup /boot!\n");
+        } else {
+            if (remove("/cust/.boot_twrp.img") != 0)
+                LOGINFO("OTA: Failed to remove old /boot backup. Expect new backup to fail!\n");
+            gui_msg(Msg("boot_backing_up=Backing up /boot...\n"));
+            if(TWFunc::Exec_Cmd("dump_image /dev/block/bootdevice/by-name/boot"
+                    " /cust/.boot_twrp.img") != 0) {
+                LOGINFO("OTA: Failed to backup /boot!\n");
+            } else {
+                gui_msg(Msg("boot_backed_up=/boot backed up to '/cust/.boot_twrp.img'\n"));
+            }
+            PartitionManager.UnMount_By_Path("/cust", false);
+            should_backup_boot = false;
+        }
+    }
+
 	return ret_val;
 }
