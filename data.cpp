@@ -59,6 +59,7 @@ InfoManager                             DataManager::mData;     // Data that is 
 InfoManager                             DataManager::mConst;    // Data that is constant and will not be saved to settings file
 
 extern bool datamedia;
+bool save_settings = false;
 
 #ifndef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
 pthread_mutex_t DataManager::m_valuesLock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
@@ -315,21 +316,13 @@ int DataManager::LoadPersistValues(void)
 
 int DataManager::Flush()
 {
+    save_settings = true;
 	return SaveValues();
 }
 
 int DataManager::SaveValues()
 {
 #ifndef TW_OEM_BUILD
-	if (PartitionManager.Mount_By_Path("/persist", false)) {
-		mPersist.SetFile(PERSIST_SETTINGS_FILE);
-		mPersist.SetFileVersion(FILE_VERSION);
-		pthread_mutex_lock(&m_valuesLock);
-		mPersist.SaveValues();
-		pthread_mutex_unlock(&m_valuesLock);
-		LOGINFO("Saved settings file values to %s\n", PERSIST_SETTINGS_FILE);
-	}
-
 	if (mBackingFile.empty())
 		return -1;
 

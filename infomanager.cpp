@@ -27,6 +27,8 @@
 #include "set_metadata.h"
 #include "data.hpp"
 
+extern bool save_settings;
+
 using namespace std;
 
 InfoManager::InfoManager() {
@@ -47,6 +49,8 @@ InfoManager::~InfoManager(void) {
 void InfoManager::SetFile(const string& filename) {
 	File = filename;
     if (File == PERSIST_SETTINGS_FILE) {
+		// TODO: Remove it eventually when change sattles down
+		// Moves existing old settings to the new location
         struct stat st;
         if (stat("/persist/.twrps", &st) == 0) {
             ifstream src("/persist/.twrps", ios::binary);
@@ -154,6 +158,20 @@ int InfoManager::SaveValues(void) {
 	}
 	fclose(out);
 	tw_set_default_metadata(File.c_str());
+
+    // Make sure our /persist settings copy is current
+    if (save_settings && File != PERSIST_SETTINGS_FILE) {
+        if (PartitionManager.Mount_By_Path(PERSIST_SETTINGS_FILE, false)) {
+            remove(PERSIST_SETTINGS_FILE);
+            ifstream src(File, ios::binary);
+            ofstream dest(PERSIST_SETTINGS_FILE, ios::binary);
+            dest << src.rdbuf();
+            PartitionManager.UnMount_By_Path(PERSIST_SETTINGS_FILE, false);
+            save_settings = false;
+            LOGINFO("InfoManager saved settings to /persist\n");
+        }
+    }
+
 	return 0;
 }
 
