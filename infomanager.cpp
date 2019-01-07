@@ -168,7 +168,6 @@ int InfoManager::SaveValues(void) {
             dest << src.rdbuf();
             PartitionManager.UnMount_By_Path(PERSIST_SETTINGS_FILE, false);
             save_settings = false;
-            LOGINFO("InfoManager saved settings to /persist\n");
         }
     }
 

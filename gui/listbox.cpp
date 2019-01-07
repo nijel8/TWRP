@@ -193,7 +193,7 @@ int GUIListBox::NotifyVarChange(const std::string& varName, const std::string& v
 			SetVisibleListLocation(mVisibleItems.empty() ? 0 : mVisibleItems.size()-1);
 		}
 	}
-	DataManager::Flush();
+
 	return 0;
 }
 
