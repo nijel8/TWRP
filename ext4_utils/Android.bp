@@ -1,0 +1,45 @@
+// Copyright 2010 The Android Open Source Project
+
+cc_library_static {
+    name: "libext4_utils_oreo",
+    srcs: [
+        "make_ext4fs.c",
+        "ext4fixup.c",
+        "ext4_utils.c",
+        "allocate.c",
+        "contents.c",
+        "extent.c",
+        "indirect.c",
+        "sha1.c",
+        "wipe.c",
+        "crc16.c",
+        "ext4_sb.c",
+        "ext4_crypt_init_extensions.cpp",
+        "ext4_crypt.cpp",
+    ],
+    // Various instances of dereferencing a type-punned pointer in extent.c
+    cflags: [
+        "-fno-strict-aliasing",
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-parameter",
+        "-Wno-unused-result",
+        "-Wno-unused-variable"
+    ],
+    clang_cflags: [
+        "-Wno-incompatible-pointer-types-discards-qualifiers",
+        "-Wno-unused-const-variable",
+    ],
+    shared_libs: [
+        "libsparse",
+        "libcutils",
+        "libz",
+        "libbase",
+        "libkeyutils",
+        "libselinux",
+    ],
+    static_libs: [
+        "liblogwrap",
+    ],
+    export_include_dirs: ["include"],
+}

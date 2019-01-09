@@ -163,13 +163,16 @@ ifeq ($(TW_OEM_BUILD),true)
 endif
 
 ifeq ($(TARGET_USERIMAGES_USE_EXT4), true)
+    LOCAL_CFLAGS += -DUSE_EXT4
     ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 28; echo $$?),0)
-        LOCAL_CFLAGS += -DUSE_EXT4
         LOCAL_C_INCLUDES += system/extras/ext4_utils
         LOCAL_SHARED_LIBRARIES += libext4_utils
         ifneq ($(wildcard external/lz4/Android.mk),)
             #LOCAL_STATIC_LIBRARIES += liblz4
         endif
+    else
+        LOCAL_C_INCLUDES += ext4_utils
+        LOCAL_STATIC_LIBRARIES += libext4_utils_oreo
     endif
 endif
 LOCAL_C_INCLUDES += external/libselinux/include
