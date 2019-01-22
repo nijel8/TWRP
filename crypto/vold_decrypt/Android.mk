@@ -103,10 +103,9 @@ ifeq ($(TW_INCLUDE_CRYPTO), true)
 
         ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 28; echo $$?),0)
             include $(CLEAR_VARS)
-
             LOCAL_MODULE := vdc_pie
             LOCAL_SRC_FILES := vdc_pie.cpp
-            LOCAL_MODULE_TAGS := eng optional
+            LOCAL_MODULE_TAGS := eng
             LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
             LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
             LOCAL_CLANG := true
