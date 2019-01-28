@@ -51,6 +51,8 @@ extern "C" {
 
 #include "vold_decrypt.h"
 
+extern bool do_finish;
+
 namespace {
 
 /* Timeouts as defined by ServiceManager */
@@ -994,6 +996,9 @@ int Exec_vdc_cryptfs(const string& command, const string& argument, vdc_ReturnVa
 					return -1;
 				}
 			}
+            if (sdkver >= 28) {
+                return WEXITSTATUS(status);
+            }
 			return 0;
 		}
 	}
@@ -1086,11 +1091,16 @@ int Run_vdc(const string& Password) {
 	return res;
 }
 
+
+bool is_vendor_symlinked = false;
+bool is_firmware_symlinked = false;
+bool is_fstab_symlinked = false;
+#ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
+vector<AdditionalService> Services;
+#endif
+
 int Vold_Decrypt_Core(const string& Password) {
 	int res;
-	bool is_vendor_symlinked = false;
-	bool is_firmware_symlinked = false;
-	bool is_fstab_symlinked = false;
 	bool is_vold_running = false;
 
 	if (Password.empty()) {
@@ -1129,7 +1139,7 @@ int Vold_Decrypt_Core(const string& Password) {
 #endif
 
 #ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
-	vector<AdditionalService> Services = Get_List_Of_Additional_Services();
+	Services = Get_List_Of_Additional_Services();
 
 	// Check if TWRP is running any of the services
 	for (size_t i = 0; i < Services.size(); ++i) {
@@ -1195,12 +1205,21 @@ int Vold_Decrypt_Core(const string& Password) {
 
 		if (res != 0) {
 			LOGINFO("Decryption failed\n");
+            do_finish = true;
+            return res;
 		}
 	} else {
 		LOGINFO("Failed to start vold\n");
 		res = VD_ERR_VOLD_FAILED_TO_START;
 	}
 
+	vold_decrypt_finish();
+	return res;
+}
+
+} // namespace
+
+void vold_decrypt_finish() {
 	// Stop services needed for vold decrypt so /system can be unmounted
 	LOGINFO("Stopping services...\n");
 	Stop_Service("sys_vold");
@@ -1253,11 +1272,7 @@ int Vold_Decrypt_Core(const string& Password) {
 		fflush(fp_kmsg);
 		fclose(fp_kmsg);
 	}
-
-	return res;
 }
-
-} // namespace
 
 /*
  * Common vold Response Codes / Errors:
