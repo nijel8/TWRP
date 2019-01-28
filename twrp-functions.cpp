@@ -36,6 +36,7 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
+#include <glob.h>
 #include <algorithm>
 #include "twrp-functions.hpp"
 #include "twcommon.h"
@@ -1137,20 +1138,24 @@ int TWFunc::Disable_Stock_Recovery_Replace(bool page) {
         PartitionManager.UnMount_By_Path("/cache", false);
     }
 
-	if (PartitionManager.Mount_By_Path(PartitionManager.Get_Android_Root_Path(), false)) {
+    string android_root = PartitionManager.Get_Android_Root_Path();
+	if (PartitionManager.Mount_By_Path(android_root, false)) {
 		if (System_Property_Get("ro.build.host").find("-miui-") == string::npos) {
-			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
+			PartitionManager.UnMount_By_Path(android_root, false);
 			return 0;
 		}
-		if (!Path_Exists("/system/recovery-from-boot.p")) {
-			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
+        glob_t glob_result;
+        string recovery_patch = android_root + "/*recovery-from-boot*";
+		if (glob(recovery_patch.c_str(), 0, NULL, &glob_result) == GLOB_NOMATCH) {
+			PartitionManager.UnMount_By_Path(android_root, false);
 			return 0;
 		}
-		if (!Path_Exists("/system/bin/install-recovery.sh")) {
-			PartitionManager.UnMount_By_Path(PartitionManager.Get_Android_Root_Path(), false);
+        globfree(&glob_result);
+		if (!Path_Exists(android_root + "/bin/install-recovery.sh")) {
+			PartitionManager.UnMount_By_Path(android_root, false);
 			return 0;
 		}
-		PartitionManager.UnMount_By_Path("/system", false);
+		PartitionManager.UnMount_By_Path(android_root, false);
 	}
 
 	LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.\n");
