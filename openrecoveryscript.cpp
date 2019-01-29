@@ -61,8 +61,6 @@ OpenRecoveryScript::VoidFunction OpenRecoveryScript::call_after_cli_command;
 
 #define SCRIPT_COMMAND_SIZE 512
 
-int mNavbarValue;
-
 int OpenRecoveryScript::check_for_script_file(void) {
 	if (!PartitionManager.Mount_By_Path(SCRIPT_FILE_CACHE, false)) {
 		LOGINFO("Unable to mount /cache for OpenRecoveryScript support.\n");
@@ -606,8 +604,6 @@ void OpenRecoveryScript::Run_OpenRecoveryScript(void) {
 	DataManager::SetValue("tw_action_text2", "");
 	DataManager::SetValue("tw_has_cancel", 0);
 	DataManager::SetValue("tw_show_reboot", 0);
-	DataManager::GetValue("tw_disable_navbar", mNavbarValue);
-	DataManager::SetValue("tw_disable_navbar", 1);
 	if (gui_startPage("action_page", 0, 1) != 0) {
 		LOGERR("Failed to load OpenRecoveryScript GUI page.\n");
 	}
@@ -635,7 +631,6 @@ int OpenRecoveryScript::Run_OpenRecoveryScript_Action() {
 			op_status = 0;
 		}
 	}
-	DataManager::SetValue("tw_disable_navbar", mNavbarValue);
 	if (reboot) {
 		TWFunc::tw_reboot(rb_system);
 		usleep(5000000); // Sleep for 5 seconds to allow reboot to occur

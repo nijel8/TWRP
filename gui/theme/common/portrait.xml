@@ -435,7 +435,7 @@
 		</page>
 
 		<page name="flash_zip">
-			<template name="page"/>
+			<template name="page_no_navbar"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -752,7 +752,7 @@
 		</page>
 
 		<page name="action_page">
-			<template name="page"/>
+			<template name="page_no_navbar"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -799,7 +799,7 @@
 		</page>
 
 		<page name="singleaction_page">
-			<template name="page"/>
+			<template name="page_no_navbar"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -839,7 +839,7 @@
 		</page>
 
         <page name="survive_reboot">
-            <template name="page"/>
+            <template name="page_no_navbar"/>
 
             <text style="text_l">
                 <placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -2388,7 +2388,7 @@
 		</page>
 
 		<page name="try_restore_decrypt">
-			<template name="page"/>
+			<template name="page_no_navbar"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -4498,7 +4498,7 @@
 		</page>
 
 		<page name="trydecrypt">
-			<template name="page"/>
+			<template name="page_no_navbar"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>

@@ -1161,11 +1161,7 @@ int TWFunc::Disable_Stock_Recovery_Replace(bool page) {
 	LOGINFO("Disable flash_recovery service at system boot to prevent stock ROM from replacing TWRP.\n");
 
 	if (page) {
-		int nav;
-		DataManager::GetValue("tw_disable_navbar", nav);
-		DataManager::SetValue("tw_disable_navbar", 1); // show in full screen
 		gui_startPage("survive_reboot", 0, 1);
-		DataManager::SetValue("tw_disable_navbar", nav);
 	}
 	int ex;
 	ex = Exec_Cmd("/sbin/twrp_persist");
