@@ -1159,20 +1159,21 @@ int Vold_Decrypt_Core(const string& Password) {
 	LOGINFO("Starting services...\n");
 #ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
 	for (size_t i = 0; i < Services.size(); ++i) {
-		if (Services[i].VOLD_Service_Name == "ven_keymaster-3-0" ) {
-			Wait_For_Property("hwservicemanager.ready", 500000, "true");
-			LOGINFO("    hwservicemanager is ready.\n");
-		}
+		if (Services[i].bin_exists) {
+			if (Services[i].Service_Binary.find("keymaster") != string::npos) {
+				Wait_For_Property("hwservicemanager.ready", 500000, "true");
+				LOGINFO("    hwservicemanager is ready.\n");
+			}
 
-		if (Services[i].bin_exists)
-			Services[i].is_running = Start_Service(Services[i].VOLD_Service_Name);
+			Start_Service(Services[i].VOLD_Service_Name);
 
-		if (Services[i].VOLD_Service_Name == "sys_qseecomd" ) {
-			Wait_For_Property("sys.listeners.registered", 500000, "true");
-			LOGINFO("    qseecomd listeners registered.\n");
-		} else if (Services[i].VOLD_Service_Name == "ven_qseecomd" ) {
-			Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
-			LOGINFO("    qseecomd listeners registered.\n");
+			if (Services[i].Service_Binary == "qseecomd") {
+				if (Services[i].Service_Path.find("vendor") == string::npos)
+					Wait_For_Property("sys.listeners.registered", 500000, "true");
+				else
+					Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
+				LOGINFO("    qseecomd listeners registered.\n");
+			}
 		}
 	}
 #endif
@@ -1256,10 +1257,25 @@ int Vold_Decrypt_Core(const string& Password) {
 	LOGINFO("Finished.\n");
 
 #ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
+	Set_Needed_Properties();
 	// Restart previously running services
 	for (size_t i = 0; i < Services.size(); ++i) {
-		if (Services[i].resume)
+		if (Services[i].resume) {
+			if (Services[i].Service_Binary.find("keymaster") != string::npos) {
+ 				Wait_For_Property("hwservicemanager.ready", 500000, "true");
+				LOGINFO("    hwservicemanager is ready.\n");
+			}
+
 			Start_Service(Services[i].TWRP_Service_Name);
+
+			if (Services[i].Service_Binary == "qseecomd") {
+				if (Services[i].Service_Path.find("vendor") == string::npos)
+					Wait_For_Property("sys.listeners.registered", 500000, "true");
+				else
+					Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
+				LOGINFO("    qseecomd listeners registered.\n");
+			}
+		}
 	}
 #endif
 
