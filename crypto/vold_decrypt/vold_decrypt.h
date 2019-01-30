@@ -39,6 +39,5 @@ enum {
 
 
 int vold_decrypt(const std::string& Password);
-void vold_decrypt_finish();
 
 #endif // _VOLD_DECRYPT_H
