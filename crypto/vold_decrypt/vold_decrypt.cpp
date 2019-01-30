@@ -224,7 +224,7 @@ string Wait_For_Property(const string& property_name, int utimeout = SLEEP_MAX_U
 				break;
 			LOGKMSG("waiting for %s to change from '%s' to '%s'\n", property_name.c_str(), prop_value, expected_value.c_str());
 			utimeout -= SLEEP_MIN_USEC;
-			usleep(SLEEP_MIN_USEC);;
+			usleep(SLEEP_MIN_USEC);
 		}
 	}
 	property_get(property_name.c_str(), prop_value, "error");
@@ -775,6 +775,9 @@ void Set_Needed_Properties(void) {
 		if (!ro_storage_structure.empty())
 			property_set("ro.storage_structure", ro_storage_structure.c_str());
 	}
+	property_set("hwservicemanager.ready", "false");
+	property_set("sys.listeners.registered", "false");
+	property_set("vendor.sys.listeners.registered", "false");
 }
 
 static unsigned int get_blkdev_size(int fd) {
@@ -1156,9 +1159,21 @@ int Vold_Decrypt_Core(const string& Password) {
 	LOGINFO("Starting services...\n");
 #ifdef TW_CRYPTO_SYSTEM_VOLD_SERVICES
 	for (size_t i = 0; i < Services.size(); ++i) {
+		if (Services[i].VOLD_Service_Name == "ven_keymaster-3-0" ) {
+			Wait_For_Property("hwservicemanager.ready", 500000, "true");
+			LOGINFO("hwservicemanager is ready.\n");
+		}
+
 		if (Services[i].bin_exists)
 			Services[i].is_running = Start_Service(Services[i].VOLD_Service_Name);
-		sleep(1);
+
+		if (Services[i].VOLD_Service_Name == "sys_qseecomd" ) {
+			Wait_For_Property("sys.listeners.registered", 500000, "true");
+			LOGINFO(" qseecomd listeners registered.\n");
+		} else if (Services[i].VOLD_Service_Name == "ven_qseecomd" ) {
+			Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
+			LOGINFO(" qseecomd listeners registered.\n");
+		}
 	}
 #endif
 	is_vold_running = Start_Service("sys_vold");
