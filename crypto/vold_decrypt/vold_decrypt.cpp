@@ -1161,7 +1161,7 @@ int Vold_Decrypt_Core(const string& Password) {
 	for (size_t i = 0; i < Services.size(); ++i) {
 		if (Services[i].VOLD_Service_Name == "ven_keymaster-3-0" ) {
 			Wait_For_Property("hwservicemanager.ready", 500000, "true");
-			LOGINFO("hwservicemanager is ready.\n");
+			LOGINFO("    hwservicemanager is ready.\n");
 		}
 
 		if (Services[i].bin_exists)
@@ -1169,10 +1169,10 @@ int Vold_Decrypt_Core(const string& Password) {
 
 		if (Services[i].VOLD_Service_Name == "sys_qseecomd" ) {
 			Wait_For_Property("sys.listeners.registered", 500000, "true");
-			LOGINFO(" qseecomd listeners registered.\n");
+			LOGINFO("    qseecomd listeners registered.\n");
 		} else if (Services[i].VOLD_Service_Name == "ven_qseecomd" ) {
 			Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
-			LOGINFO(" qseecomd listeners registered.\n");
+			LOGINFO("    qseecomd listeners registered.\n");
 		}
 	}
 #endif
