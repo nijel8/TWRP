@@ -994,6 +994,9 @@ int Exec_vdc_cryptfs(const string& command, const string& argument, vdc_ReturnVa
 					return -1;
 				}
 			}
+			if (sdkver >= 28) {
+				return WEXITSTATUS(status);
+			}
 			return 0;
 		}
 	}
@@ -1155,6 +1158,7 @@ int Vold_Decrypt_Core(const string& Password) {
 	for (size_t i = 0; i < Services.size(); ++i) {
 		if (Services[i].bin_exists)
 			Services[i].is_running = Start_Service(Services[i].VOLD_Service_Name);
+		sleep(1);
 	}
 #endif
 	is_vold_running = Start_Service("sys_vold");
