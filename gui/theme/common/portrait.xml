@@ -435,7 +435,7 @@
 		</page>
 
 		<page name="flash_zip">
-			<template name="page_no_navbar"/>
+			<template name="page"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -450,6 +450,10 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<action>
 				<condition var1="tw_operation_state" var2="1"/>
@@ -752,7 +756,7 @@
 		</page>
 
 		<page name="action_page">
-			<template name="page_no_navbar"/>
+			<template name="page"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -767,6 +771,10 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<button style="main_button_half_height">
 				<condition var1="tw_has_cancel" var2="1"/>
@@ -799,7 +807,7 @@
 		</page>
 
 		<page name="singleaction_page">
-			<template name="page_no_navbar"/>
+			<template name="page"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -814,6 +822,10 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<action>
 				<condition var1="tw_operation_state" var2="1"/>
@@ -839,7 +851,7 @@
 		</page>
 
         <page name="survive_reboot">
-            <template name="page_no_navbar"/>
+            <template name="page"/>
 
             <text style="text_l">
                 <placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -860,6 +872,10 @@
                 <placement x="%center_x%" y="%row9_y%" placement="5"/>
                 <text>{@survive_line2=Please, wait...}</text>
             </text>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
             <action>
                 <condition var1="tw_operation_state" var2="1"/>
@@ -2388,7 +2404,7 @@
 		</page>
 
 		<page name="try_restore_decrypt">
-			<template name="page_no_navbar"/>
+			<template name="page"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -2403,6 +2419,10 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<action>
 				<action function="decrypt_backup"/>
@@ -4497,7 +4517,7 @@
 		</page>
 
 		<page name="trydecrypt">
-			<template name="page_no_navbar"/>
+			<template name="page"/>
 
 			<text style="text_l">
 				<placement x="%col1_x_header%" y="%row3_header_y%"/>
@@ -4512,6 +4532,10 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
+
+            <fill color="%background_color%">
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<action>
 				<action function="decrypt"/>
