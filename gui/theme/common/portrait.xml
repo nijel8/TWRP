@@ -108,7 +108,7 @@
 		</style>
 
 		<style name="scrolllist">
-		        <fastscroll rectcolor="%accent_color%" w="%fastscroll_w%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
+			<fastscroll rectcolor="%accent_color%" w="%fastscroll_w%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
 			<background color="%background_color%"/>
 			<font resource="font_m" spacing="%fileselector_spacing%" color="%text_color%"/>
 			<fastscroll linecolor="%fileselector_linecolor%" rectcolor="%accent_color%" w="%fastscroll_w%" linew="%fastscroll_linew%" rectw="%fastscroll_rectw%" recth="%fastscroll_recth%"/>
@@ -451,10 +451,6 @@
 
 			<template name="progress_bar"/>
 
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
-
 			<action>
 				<condition var1="tw_operation_state" var2="1"/>
 				<action function="page">flash_done</action>
@@ -772,10 +768,6 @@
 
 			<template name="progress_bar"/>
 
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
-
 			<button style="main_button_half_height">
 				<condition var1="tw_has_cancel" var2="1"/>
 				<placement x="%center_x%" y="%row21a_y%"/>
@@ -823,10 +815,6 @@
 
 			<template name="progress_bar"/>
 
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
-
 			<action>
 				<condition var1="tw_operation_state" var2="1"/>
 				<actions>
@@ -850,55 +838,62 @@
 			</action>
 		</page>
 
-        <page name="survive_reboot">
-            <template name="page"/>
+		<page name="survive_reboot">
+			<template name="page"/>
 
-            <text style="text_l">
-                <placement x="%col1_x_header%" y="%row3_header_y%"/>
-                <text>%tw_action_text1%</text>
-            </text>
+			<text style="text_l">
+				<placement x="%col1_x_header%" y="%row3_header_y%"/>
+				<text>%tw_action_text1%</text>
+			</text>
 
-            <text style="text_m">
-                <placement x="%col1_x_header%" y="%row4_header_y%"/>
-                <text>%tw_action_text2%</text>
-            </text>
+			<text style="text_m">
+				<condition var1="tw_no_cpu_temp" var2="0"/>
+				<placement x="%col1_x_header%" y="%row4_header_y%"/>
+				<text>%tw_version% %tw_version_unofficial%</text>
+			</text>
 
-            <text style="text_m_accent">
-                <placement x="%center_x%" y="%row7_y%" placement="5"/>
-                <text>{@survive_line1=Checking if TWRP will survive system boot!}</text>
-            </text>
+			<text>
+				<font resource="font_l" color="%accent_color%"/>
+				<placement x="%center_x%" y="%row7_y%" placement="5"/>
+				<text>{@survive_line1=Surviving system boot!}</text>
+			</text>
 
-            <text style="text_m_accent">
-                <placement x="%center_x%" y="%row9_y%" placement="5"/>
-                <text>{@survive_line2=Please, wait...}</text>
-            </text>
+			<image>
+				<image resource="by-by_mi_bunny"/>
+				<placement x="%center_x%" y="%row13_y%" placement="4"/>
+			</image>
 
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
+			<text style="text_m_accent">
+				<placement x="%center_x%" y="%row18_y%" placement="5"/>
+				<text>{@survive_line2=Please, wait...}</text>
+			</text>
 
-            <action>
-                <condition var1="tw_operation_state" var2="1"/>
-                <actions>
-                    <action function="set">tw_page_done=1</action>
-                </actions>
-            </action>
+			<fill color="%background_color%">
+				<placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+			</fill>
 
-            <action>
-                <condition var1="tw_has_action2" var2="0"/>
-                <actions>
-                    <action function="%tw_action%">%tw_action_param%</action>
-                </actions>
-            </action>
+			<action>
+				<condition var1="tw_operation_state" var2="1"/>
+				<actions>
+					<action function="set">tw_page_done=1</action>
+				</actions>
+			</action>
 
-            <action>
-                <condition var1="tw_has_action2" var2="1"/>
-                <actions>
-                    <action function="%tw_action%">%tw_action_param%</action>
-                    <action function="%tw_action2%">%tw_action2_param%</action>
-                </actions>
-            </action>
-        </page>
+			<action>
+				<condition var1="tw_has_action2" var2="0"/>
+				<actions>
+					<action function="%tw_action%">%tw_action_param%</action>
+				</actions>
+			</action>
+
+			<action>
+				<condition var1="tw_has_action2" var2="1"/>
+				<actions>
+					<action function="%tw_action%">%tw_action_param%</action>
+					<action function="%tw_action2%">%tw_action2_param%</action>
+				</actions>
+			</action>
+		</page>
 
 		<page name="action_complete">
 			<template name="page"/>
@@ -2419,10 +2414,6 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
-
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
 
 			<action>
 				<action function="decrypt_backup"/>
@@ -4532,10 +4523,6 @@
 			<template name="console"/>
 
 			<template name="progress_bar"/>
-
-            <fill color="%background_color%">
-                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
-            </fill>
 
 			<action>
 				<action function="decrypt"/>

@@ -68,6 +68,8 @@
 		<image name="kb_arrow_right" filename="kb_arrow_right" retainaspect="1"/>
 		<image name="kb_arrow_up" filename="kb_arrow_up" retainaspect="1"/>
 		<image name="kb_arrow_down" filename="kb_arrow_down" retainaspect="1"/>
+
+		<image name="by-by_mi_bunny" filename="by-by_mi_bunny" retainaspect="1"/>
 	</resources>
 
 	<variables>
@@ -343,6 +345,11 @@
 				<condition var1="tw_busy" var2="0"/>
 				<action function="key">back</action>
 			</button>
+
+            <fill color="%background_color%">
+            	<condition var1="tw_busy" var2="1"/>
+                <placement x="0" y="%navbar_y%" w="%screen_width%" h="%navbar_height%"/>
+            </fill>
 
 			<action>
 				<touch key="power"/>

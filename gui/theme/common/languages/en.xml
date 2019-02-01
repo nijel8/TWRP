@@ -27,7 +27,7 @@
 		<string name="xposed_en_complete">Xposed Enabled</string>
 
         <!-- Survive system boot strings -->
-        <string name="survive_line1">Checking if TWRP will survive system boot!</string>
+        <string name="survive_line1">Surviving system boot!</string>
         <string name="survive_line2">Please, wait...</string>
 
         <!-- Backup/restore boot strings -->

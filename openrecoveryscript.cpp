@@ -424,7 +424,7 @@ int OpenRecoveryScript::run_script_file(void) {
 		}
 		gui_msg("done=Done.");
 	}
-	gui_highlight("survive_line1=Checking if TWRP will survive system boot!");
+	gui_highlight("survive_line1=Surviving system boot!");
 	gui_highlight("survive_line2=Please, wait...");
 	if (TWFunc::Disable_Stock_Recovery_Replace(false) == 0) {
 		gui_highlight("done=Done.");
