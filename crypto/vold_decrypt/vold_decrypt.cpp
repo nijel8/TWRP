@@ -1177,11 +1177,11 @@ int Vold_Decrypt_Core(const string& Password) {
 			Start_Service(Services[i].VOLD_Service_Name);
 
 			if (Services[i].Service_Binary == "qseecomd") {
-				if (Services[i].Service_Path.find("vendor") == string::npos)
-					Wait_For_Property("sys.listeners.registered", 500000, "true");
-				else
-					Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
-				LOGINFO("    qseecomd listeners registered.\n");
+				if (Wait_For_Property("sys.listeners.registered", 500000, "true") == "true"
+						|| Wait_For_Property("vendor.sys.listeners.registered", 500000, "true") == "true") {
+					LOGINFO("    qseecomd listeners registered.\n");
+					continue;
+				}
 			}
 		}
 	}
@@ -1283,11 +1283,11 @@ int Vold_Decrypt_Core(const string& Password) {
 			Start_Service(Services[i].TWRP_Service_Name);
 
 			if (Services[i].Service_Binary == "qseecomd") {
-				if (Services[i].Service_Path.find("vendor") == string::npos)
-					Wait_For_Property("sys.listeners.registered", 500000, "true");
-				else
-					Wait_For_Property("vendor.sys.listeners.registered", 500000, "true");
-				LOGINFO("    qseecomd listeners registered.\n");
+				if (Wait_For_Property("sys.listeners.registered", 500000, "true") == "true"
+						|| Wait_For_Property("vendor.sys.listeners.registered", 500000, "true") == "true") {
+					LOGINFO("    qseecomd listeners registered.\n");
+					continue;
+				}
 			}
 		}
 	}
