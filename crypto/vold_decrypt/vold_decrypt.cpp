@@ -792,17 +792,19 @@ static unsigned int get_blkdev_size(int fd) {
 
 #define CRYPT_FOOTER_OFFSET 0x4000
 static char footer[16 * 1024];
+const char* userdata_path;
+static off64_t offset;
 
 int footer_br(const string& command) {
 	int fd;
-	const char* userdata_path = "/dev/block/bootdevice/by-name/userdata";
-	unsigned int nr_sec;
-	off64_t offset;
 
 	if (command == "backup") {
+		unsigned int nr_sec;
+		TWPartition* userdata = PartitionManager.Find_Partition_By_Path("/data");
+		userdata_path = userdata->Actual_Block_Device.c_str();
 		fd = open(userdata_path, O_RDONLY);
 		if (fd < 0) {
-			LOGERROR("E:footer_br: Cannot open '%s': %s\n", userdata_path, strerror(errno));
+			LOGERROR("E:footer_backup: Cannot open '%s': %s\n", userdata_path, strerror(errno));
 			return -1;
 		}
 		if ((nr_sec = get_blkdev_size(fd))) {
@@ -813,7 +815,7 @@ int footer_br(const string& command) {
 			return -1;
 		}
 		if (lseek64(fd, offset, SEEK_SET) == -1) {
-			LOGERROR("E:footer_br: Failed to lseek64\n");
+			LOGERROR("E:footer_backup: Failed to lseek64\n");
 			close(fd);
 			return -1;
 		}
@@ -825,15 +827,12 @@ int footer_br(const string& command) {
 		close(fd);
 	} else if (command == "restore") {
 		fd = open(userdata_path, O_WRONLY);
-		if ((nr_sec = get_blkdev_size(fd))) {
-			offset = ((off64_t)nr_sec * 512) - CRYPT_FOOTER_OFFSET;
-		} else {
-			LOGERROR("E:footer_br: Failed to get offset\n");
-			close(fd);
+		if (fd < 0) {
+			LOGERROR("E:footer_restore: Cannot open '%s': %s\n", userdata_path, strerror(errno));
 			return -1;
 		}
 		if (lseek64(fd, offset, SEEK_SET) == -1) {
-			LOGERROR("E:footer_br: Failed to lseek64\n");
+			LOGERROR("E:footer_restore: Failed to lseek64\n");
 			close(fd);
 			return -1;
 		}
@@ -1114,10 +1113,20 @@ int Vold_Decrypt_Core(const string& Password) {
 		LOGINFO("ERROR: vdc not found, aborting.\n");
 		return VD_ERR_MISSING_VDC;
 	}
-    if(PartitionManager.Find_Partition_By_Path("/vendor")) {
-        if (!PartitionManager.Mount_By_Path("/vendor", true))
-            return VD_ERR_UNABLE_TO_MOUNT_VENDOR;
-    }
+
+#ifdef TW_CRYPTO_SYSTEM_VOLD_MOUNT
+	vector<string> partitions = TWFunc::Split_String(TW_CRYPTO_SYSTEM_VOLD_MOUNT, " ");
+	for (size_t i = 0; i < partitions.size(); ++i) {
+		string mnt_point = "/" + partitions[i];
+		if(PartitionManager.Find_Partition_By_Path(mnt_point)) {
+			if (!PartitionManager.Mount_By_Path(mnt_point, true)) {
+				LOGERROR("Unable to mount %s\n", mnt_point.c_str());
+				return VD_ERR_UNABLE_TO_MOUNT_EXTRA;
+			}
+			LOGINFO("%s partition mounted\n", partitions[i].c_str());
+		}
+	}
+#endif
 
 	fp_kmsg = fopen("/dev/kmsg", "a");
 
@@ -1247,12 +1256,17 @@ int Vold_Decrypt_Core(const string& Password) {
 		umount2(PartitionManager.Get_Android_Root_Path().c_str(), MNT_DETACH);
 	}
 
-    if (PartitionManager.Is_Mounted_By_Path("/vendor")) {
-        if (!PartitionManager.UnMount_By_Path("/vendor", true)) {
-            LOGINFO("WARNING: vendor could not be unmounted normally!\n");
-            umount2("/vendor", MNT_DETACH);
-        }
-    }
+#ifdef TW_CRYPTO_SYSTEM_VOLD_MOUNT
+	for (size_t i = 0; i < partitions.size(); ++i) {
+		string mnt_point = "/" + partitions[i];
+		if(PartitionManager.Is_Mounted_By_Path(mnt_point)) {
+			if (!PartitionManager.UnMount_By_Path(mnt_point, true)) {
+				LOGINFO("WARNING: %s partition could not be unmounted normally!\n", partitions[i].c_str());
+				umount2(mnt_point.c_str(), MNT_DETACH);
+			}
+		}
+	}
+#endif
 
 	LOGINFO("Finished.\n");
 

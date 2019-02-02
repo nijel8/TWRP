@@ -27,6 +27,12 @@ ifeq ($(TW_INCLUDE_CRYPTO), true)
             services := $(TW_CRYPTO_USE_SYSTEM_VOLD)
         endif
 
+        # Parse TW_CRYPTO_SYSTEM_VOLD_MOUNT
+        ifneq ($(TW_CRYPTO_SYSTEM_VOLD_MOUNT),)
+            # Per device additional partitions to mount
+            partitions := $(TW_CRYPTO_SYSTEM_VOLD_MOUNT)
+        endif
+
         # List of .rc files for each additional service
         rc_files := $(foreach item,$(services),init.recovery.vold_decrypt.$(item).rc)
 
@@ -84,6 +90,10 @@ ifeq ($(TW_INCLUDE_CRYPTO), true)
             else
                 LOCAL_CFLAGS += -DTW_CRYPTO_SYSTEM_VOLD_SERVICES='"$(services)"'
             endif
+        endif
+
+        ifneq ($(partitions),)
+            LOCAL_CFLAGS += -DTW_CRYPTO_SYSTEM_VOLD_MOUNT='"$(partitions)"'
         endif
 
         ifeq ($(TW_CRYPTO_SYSTEM_VOLD_DEBUG),true)
